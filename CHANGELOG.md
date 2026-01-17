@@ -1,4 +1,4 @@
-# Changelog
+zr# Changelog
 
 All notable changes to TypingQuest will be documented in this file.
 
@@ -9,9 +9,48 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Planned
 - Save/load game state
-- Meta-progression persistence
-- Sound effects (terminal bells)
-- Additional enemy types
+- Wire up dormant narrative systems
+- Balance pass (once things are connected)
+
+---
+
+## [0.3.0] - 2026-01-17
+
+### 🎉 Major Gameplay Integration
+
+This release focuses on **actually connecting systems** that existed but were dormant. The game went from "vibes-based scaffolding" to "playable loop with real mechanics."
+
+### Added
+- **Spell Casting System**
+  - Press `Tab` to toggle spell mode during combat
+  - Press `1-9` to select a spell from your spellbook
+  - Type the spell's incantation to cast it
+  - Spells now actually deal damage and cost MP
+
+- **Faction Reputation**
+  - Five factions now tracked in game state: Silent Order, Echoing Choir, Merchant Guild, Wandering Wardens, Void Touched
+  - Faction standings displayed in Stats screen (`s`)
+  - Event outcomes can now modify faction reputation
+
+- **Meta-Progression (Partial)**
+  - Ink currency earned on death (10 base + bonuses for floors/enemies)
+  - Ink total displayed on Game Over screen
+  - Note: Ink doesn't persist yet (no save/load)
+
+### Fixed
+- **Floor 5 Tutorial Hardlock** — end_rest() now properly advances floors when floor_complete is true
+- **Combat Feel Disconnected** — typing_feel system now receives keystrokes and word completions
+- **Combos Felt Weak** — increased combo multiplier from 5% to 10% per combo (max 3x at 20 combo)
+
+### Changed
+- Combat help text updated to show spell controls
+- Game Over screen shows Ink earned and breakdown
+
+### Honest Assessment
+~15,000 lines of code remain dormant:
+- deep_lore.rs, narrative_seed.rs, voice_system.rs, skills.rs, typing_context.rs, encounter_writing.rs, run_modifiers.rs
+
+These systems compile. They have cool designs. They just... aren't connected to anything yet. This is a hobby project, not a product.
 
 ---
 

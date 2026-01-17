@@ -4,9 +4,48 @@
 
 [![Rust](https://img.shields.io/badge/Rust-1.70+-DEA584?style=flat&logo=rust&logoColor=white)](https://www.rust-lang.org/)
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat)](LICENSE)
-[![Version](https://img.shields.io/badge/Version-0.2.1-blue?style=flat)](CHANGELOG.md)
-[![Status](https://img.shields.io/badge/Status-Active_Development-orange?style=flat)]()
+[![Version](https://img.shields.io/badge/Version-0.3.0-blue?style=flat)](CHANGELOG.md)
+[![Status](https://img.shields.io/badge/Status-Experimental_🧪-yellow?style=flat)]()
 [![TUI](https://img.shields.io/badge/TUI-ratatui-purple?style=flat)](https://github.com/ratatui-org/ratatui)
+
+---
+
+## ⚠️ Project Status
+
+**This is a personal hobby project — a fun "fuck around and find out" experiment in terminal game development.**
+
+It currently exists in a *largely disconnected state*. There's ~23,000 lines of code across 37 modules, but honestly? About 60% of that is dormant scaffolding waiting to be wired up. The vision is grand. The reality is messier.
+
+### What Actually Works (v0.3.0)
+- ✅ Full 10-floor dungeon progression
+- ✅ Combat with typing, combos, and flow states
+- ✅ 5 playable classes with distinct stats
+- ✅ Basic spellcasting (Tab to toggle, 1-9 to select)
+- ✅ Items, shops, rest sites, treasure rooms
+- ✅ Tutorial system (5 phases)
+- ✅ Help overlay (press `?`)
+- ✅ Meta-progression tracking (Ink earned on death)
+- ✅ Faction reputation system (displayed in Stats)
+
+### What's Dormant (~15,000 Lines)
+These systems exist but aren't connected to gameplay yet:
+- 🔸 **Deep Lore** (853 lines) — World cosmology, lore fragments
+- 🔸 **Narrative Seeds** (906 lines) — Story generation framework
+- 🔸 **Voice System** (794 lines) — NPC personality/dialogue
+- 🔸 **Skills** (490 lines) — Active/passive skill trees
+- 🔸 **Typing Context** (754 lines) — Thematic word generation
+- 🔸 **Encounter Writing** (783 lines) — Authored events
+- 🔸 **Run Modifiers** (632 lines) — Challenge variants
+
+### Known Issues
+- 🐛 Balance is completely untested — you might breeze or get wrecked
+- 🐛 Some events reference systems that don't exist yet
+- 🐛 Spell damage calculations are placeholder
+- 🐛 No save/load — death is permadeath, closing is also death
+- 🐛 Item effects are minimal
+- 🐛 The game "ending" is pretty anticlimactic
+
+This is a learning project. It compiles. It runs. It's fun to hack on. Don't expect polish.
 
 ---
 
@@ -215,12 +254,9 @@ cargo check
 
 ## Contributing
 
-TypingQuest is a personal project in active development. Issues and suggestions welcome.
+TypingQuest is a personal hobby project. It's not looking for contributors, but if you want to fork it and do something cool, go for it.
 
-To contribute:
-1. Open an issue describing the proposed change
-2. Fork and create a feature branch
-3. Submit a focused PR with clear description
+If you find a bug that's actually blocking gameplay (not just "this system isn't wired up"), feel free to open an issue.
 
 ---
 

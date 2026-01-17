@@ -823,7 +823,7 @@ dependencies = [
 
 [[package]]
 name = "typingquest"
-version = "0.2.1"
+version = "0.3.0"
 dependencies = [
  "better-panic",
  "chrono",
