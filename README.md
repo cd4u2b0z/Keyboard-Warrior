@@ -16,7 +16,7 @@ TypingQuest combines the satisfying mechanics of typing trainers like [ttyper](h
 ║  ═══════════════════════════════════════════════════════════════════════ ║
 ║                                                                          ║
 ║   ╭───────────╮                    ╭───────────╮                         ║
-║   │    YOU    │      ⚔️  vs ⚔️      │   󰚌 ELITE │                         ║
+║   │    YOU    │      󰓥  vs 󰓥      │   󰚌 ELITE │                         ║
 ║   │  Wordsmith│                    │Silent Warden│                       ║
 ║   │ HP ████░░ │                    │ HP ██████░░ │                        ║
 ║   │ MP ██████ │                    │             │                        ║
@@ -30,7 +30,7 @@ TypingQuest combines the satisfying mechanics of typing trainers like [ttyper](h
 ║   └────────────────────────────────────────────────────────────────┘    ║
 ║                                                                          ║
 ║   ╭─ FLOW ─────────╮  ╭─ COMBO ────────╮  ╭─ STATS ────────────────╮    ║
-║   │ ✨ TRANSCENDENT │  │ 󰈸 12x STREAK  │  │ WPM: 94  ACC: 98%      │    ║
+║   │ 󰄀 TRANSCENDENT │  │ 󰈸 12x STREAK  │  │ WPM: 94  ACC: 98%      │    ║
 ║   │ Crit +30%      │  │ DMG: 3.0x      │  │ 󰐀 Ink: 847            │    ║
 ║   ╰────────────────╯  ╰────────────────╯  ╰────────────────────────╯    ║
 ║                                                                          ║
@@ -258,7 +258,7 @@ typingquest/
     ├── game/                     # 󰓎 CORE SYSTEMS (~15,000 lines)
     │   ├── mod.rs                # Module exports
     │   │
-    │   │── # 🎭 Narrative Layer
+    │   │── # 󰎇 Narrative Layer
     │   ├── deep_lore.rs          # Cosmology, endings (1,200 lines)
     │   ├── lore_fragments.rs     # Discoverable lore (900 lines)
     │   ├── encounter_writing.rs  # Authored encounters (1,000 lines)
@@ -269,20 +269,20 @@ typingquest/
     │   ├── voice_system.rs       # NPC personalities (800 lines)
     │   ├── narrative.rs          # Base narrative (600 lines)
     │   │
-    │   │── # ⌨️ Typing Systems
+    │   │── # 󰌌 Typing Systems
     │   ├── typing_feel.rs        # Flow & combos (450 lines)
     │   ├── typing_context.rs     # Context analysis (650 lines)
     │   ├── combat.rs             # Typing combat (370 lines)
     │   ├── combat_engine.rs      # Event-driven (420 lines)
     │   ├── combat_events.rs      # Combat events (200 lines)
     │   │
-    │   │── # 🏆 Progression
+    │   │── # 󰆧 Progression
     │   ├── meta_progression.rs   # Hades-style unlocks (650 lines)
     │   ├── run_modifiers.rs      # Heat system (630 lines)
     │   ├── stats.rs              # Achievements (450 lines)
     │   ├── skills.rs             # Skill trees (550 lines)
     │   │
-    │   │── # 🎮 Core Game
+    │   │── # 󰊗 Core Game
     │   ├── state.rs              # Game state machine (150 lines)
     │   ├── player.rs             # Player data (270 lines)
     │   ├── enemy.rs              # Enemy system (400 lines)
@@ -447,7 +447,7 @@ Original work by **Dr. Baklava** • [github.com/cd4u2b0z](https://github.com/cd
 ---
 
 <details>
-<summary><strong>📊 Project Stats</strong></summary>
+<summary><strong>󰄪 Project Stats</strong></summary>
 
 - **Total Lines of Code:** ~20,000
 - **Rust Source Files:** 35+

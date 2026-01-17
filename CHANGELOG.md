@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.2.0] - 2025-01-18
 
-### 🎭 Deep Narrative Systems
+### 󰎇 Deep Narrative Systems
 - **DeepLore System** (`deep_lore.rs`, ~700 lines)
   - Complete cosmology: The Silence, The Syntax, the world's creation
   - Five faction histories with detailed backstories
@@ -34,7 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Location-specific atmosphere rules
   - Character voice patterns
 
-### 🔗 Narrative Integration
+### 󰌹 Narrative Integration
 - **NarrativeEngine** (`narrative_integration.rs`, ~550 lines)
   - Coordinates all story systems into unified experience
   - Chapter progression: Awakening → Discovery → Revelation → Allegiance → Conflict → Reckoning
@@ -42,7 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Mystery progress tracking with revelation thresholds
   - Faction reputation with consequence events at thresholds
 
-### ⌨️ Typing Feel Engine
+### 󰌌 Typing Feel Engine
 - **TypingFeel System** (`typing_feel.rs`, ~450 lines)
   - Flow states: Building → Flowing → Transcendent
   - Combo system with decay timer (up to 3x multiplier)
@@ -51,7 +51,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Visual effects: screen shake, color flash, text ripple
   - Perfect word tracking for bonus damage
 
-### 🏆 Meta-Progression (Hades-Style)
+### 󰆧 Meta-Progression (Hades-Style)
 - **MetaProgress System** (`meta_progression.rs`, ~650 lines)
   - Ink currency earned from every run (persists through death)
   - 7-node unlock tree: HP bonus, gold bonus, time bonus, damage bonus, word preview, map reveal, dialogue memory
@@ -60,7 +60,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 10+ achievements: speed_demon, perfectionist, pacifist, true_ending, etc.
   - Heat system for increased difficulty with better rewards
 
-### 🏛️ Enhanced Faction System
+### 󰛡 Enhanced Faction System
 - **Five Factions** with deep relationships:
   - The Silent Order (monks of careful observation)
   - The Echoing Choir (prophets speaking impossible truths)
@@ -70,7 +70,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Faction reputation affects available encounters and endings
 - Cross-faction relationships (allies, rivals, enemies)
 
-### 🎨 Voice System
+### 󰗚 Voice System
 - **15+ Authored NPCs** (`voice_system.rs`, ~800 lines)
   - Each character has distinct vocabulary, cadence, concerns
   - Dialogue adapts based on faction standing and mystery progress

@@ -242,10 +242,10 @@ impl Room {
     pub fn get_icon(&self) -> &'static str {
         match self.room_type {
             RoomType::Combat => "⚔",
-            RoomType::Elite => "💀",
+            RoomType::Elite => "󰚌",
             RoomType::Boss => "👑",
-            RoomType::Treasure => "💎",
-            RoomType::Rest => "🔥",
+            RoomType::Treasure => "󰆧",
+            RoomType::Rest => "󰒲",
             RoomType::Shop => "🛒",
             RoomType::Event => "❓",
             RoomType::Start => "🚪",

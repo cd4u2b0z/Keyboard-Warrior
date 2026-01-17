@@ -269,10 +269,10 @@ impl Spell {
     pub fn get_element_symbol(&self) -> &'static str {
         match self.element {
             SpellElement::Physical => "⚔",
-            SpellElement::Fire => "🔥",
+            SpellElement::Fire => "󰈸",
             SpellElement::Ice => "❄",
             SpellElement::Lightning => "⚡",
-            SpellElement::Arcane => "✨",
+            SpellElement::Arcane => "󰄀",
             SpellElement::Holy => "✝",
             SpellElement::Dark => "☠",
             SpellElement::Nature => "🌿",
