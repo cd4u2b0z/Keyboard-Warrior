@@ -1,4 +1,4 @@
-# ⚔️ TypingQuest
+# 󰓥 TypingQuest
 
 **A roguelike RPG typing adventure — type to cast spells, defeat enemies, and save the realm.**
 
@@ -14,17 +14,17 @@ TypingQuest combines the satisfying mechanics of typing trainers like [ttyper](h
 ║  TypingQuest                                    Floor: 3         ║
 ╠══════════════════════════════════════════════════════════════════╣
 ║                                                                  ║
-║       ╭─────╮      vs      ╭─────╮                              ║
-║       │ YOU │              │ ☠️  │  Shadow Wraith               ║
-║       │ ███ │              │ ░░░ │  HP: ████████░░ 80/100       ║
-║       ╰─────╯              ╰─────╯                              ║
+║       ╭─────╮      vs      ╭─────╮                               ║
+║       │ YOU │              │ 󰚌  │  Shadow Wraith                 ║
+║       │ ███ │              │ ░░░ │  HP: ████████░░ 80/100        ║
+║       ╰─────╯              ╰─────╯                               ║
 ║                                                                  ║
 ║  ┌────────────────────────────────────────────────────────────┐  ║
 ║  │  Type: "incantation"                                       │  ║
-║  │  >     incan_                          ⏱️ 3.2s  🔥 5x      │  ║
+║  │  >     incan_                          󰔚 3.2s  󰈸 5x        │  ║
 ║  └────────────────────────────────────────────────────────────┘  ║
 ║                                                                  ║
-║  [WPM: 78]  [Accuracy: 96%]  [Combo: 5x]  [Streak: 🔥🔥🔥]     ║
+║  [WPM: 78]  [Accuracy: 96%]  [Combo: 5x]  [Streak: 󰈸󰈸󰈸]          ║
 ╚══════════════════════════════════════════════════════════════════╝
 ```
 
@@ -64,13 +64,13 @@ TypingQuest combines the satisfying mechanics of typing trainers like [ttyper](h
 
 | Type | Icon | Description |
 |------|------|-------------|
-| Combat | ⚔️ | Standard enemy encounters |
-| Elite | 💀 | Harder enemies, better rewards |
-| Boss | 👑 | Floor boss battles |
-| Treasure | 📦 | Free items and gold |
-| Shop | 🛒 | Buy equipment and consumables |
-| Rest | 🏕️ | Heal, train, or meditate |
-| Event | ❓ | Random encounters with choices |
+| Combat | 󰓥 | Standard enemy encounters |
+| Elite | 󰚌 | Harder enemies, better rewards |
+| Boss | 󰮇 | Floor boss battles |
+| Treasure | 󰆧 | Free items and gold |
+| Shop | 󰒍 | Buy equipment and consumables |
+| Rest | 󰒲 | Heal, train, or meditate |
+| Event | 󰋗 | Random encounters with choices |
 
 ### Combat Mechanics
 
@@ -98,137 +98,82 @@ TypingQuest combines the satisfying mechanics of typing trainers like [ttyper](h
 ratatui = "0.28"      # TUI framework
 crossterm = "0.28"    # Terminal handling
 serde = "1.0"         # Serialization
-rand = "0.8"          # Random generation
+ron = "0.8"           # RON config format
+rand = "0.8"          # RNG
+better-panic = "0.3"  # Panic handling
 ```
 
 ---
 
-## 󰑣 Quick Start
-
-### One-Line Install (Linux/macOS)
+## 󰔎 Quick Start
 
 ```bash
-git clone https://github.com/cd4u2b0z/typingquest.git ~/typingquest
-cd ~/typingquest && cargo build --release && ./target/release/typingquest
-```
-
-### Run from Source
-
-```bash
+# Clone and run
 git clone https://github.com/cd4u2b0z/typingquest.git
 cd typingquest
 cargo run --release
+
+# Or install globally
+cargo install --path .
+typingquest
 ```
 
 ---
 
 ## 󰏗 Installation
 
-### Step 1: Install Rust
+### From Source
 
 ```bash
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-source ~/.cargo/env
-```
-
-### Step 2: Clone Repository
-
-```bash
-git clone https://github.com/cd4u2b0z/typingquest.git ~/typingquest
-cd ~/typingquest
-```
-
-### Step 3: Build Release
-
-```bash
+git clone https://github.com/cd4u2b0z/typingquest.git
+cd typingquest
 cargo build --release
-```
-
-### Step 4: Run
-
-```bash
 ./target/release/typingquest
 ```
 
-### Optional: Add to PATH
+### From crates.io (coming soon)
 
 ```bash
-# Add to ~/.zshrc or ~/.bashrc
-alias typingquest='~/typingquest/target/release/typingquest'
+cargo install typingquest
 ```
 
 ---
 
-## 󰈈 How to Play
+## 󰊗 How to Play
 
-### 1. Choose Your Class
-
-Each class has unique strengths — see [Classes](#-classes) section below.
-
-### 2. Explore the Dungeon
-
-Navigate through procedurally generated floors. Each room presents different challenges:
-
-- **Combat** — Type words to attack enemies
-- **Shops** — Spend gold on upgrades
-- **Rest Sites** — Recover HP/MP or train
-- **Events** — Make choices that affect your run
-
-### 3. Type to Fight
-
-When combat begins:
-
-1. A word appears on screen
-2. Type it correctly as fast as possible
-3. Your speed and accuracy determine damage
-4. Build combos for massive multipliers
-5. Watch your timer — enemies attack when it runs out!
-
-### 4. Survive & Progress
-
-Clear 10 floors to achieve victory. Death means starting over (it's a roguelike!).
+1. **Select a class** — Each has unique abilities and playstyles
+2. **Descend the dungeon** — 10 procedurally generated floors
+3. **Type to fight** — Words appear, type them quickly and accurately
+4. **Manage resources** — HP, MP, gold, and items
+5. **Level up** — Gain XP, unlock skills, find equipment
+6. **Defeat the boss** — Each floor ends with a boss battle
 
 ---
 
 ## 󰌌 Controls
 
-### Menu Navigation
-
 | Key | Action |
 |-----|--------|
-| `↑` / `k` | Menu up |
-| `↓` / `j` | Menu down |
-| `Enter` | Confirm / Select |
-| `Esc` | Back / Cancel |
-
-### Dungeon
-
-| Key | Action |
-|-----|--------|
-| `e` / `Enter` | Explore (next room) |
+| `a-z` | Type characters |
+| `Backspace` | Delete character |
+| `Enter` | Confirm selection |
+| `Esc` | Cancel/Back |
+| `j/k` | Navigate menus |
 | `i` | Open inventory |
 | `s` | View stats |
 | `q` | Quit game |
-
-### Combat
-
-| Key | Action |
-|-----|--------|
-| `[a-z]` | Type characters |
-| `Backspace` | Delete last character |
-| `Esc` | Attempt to flee |
 
 ---
 
 ## 󰆥 Classes
 
-| Class | Specialty | Playstyle |
-|-------|-----------|-----------|
-| 󰊠 **Wordsmith** | Balanced | Jack of all trades, forgiving for beginners |
-| 󰏫 **Scribe** | Accuracy | Bonus damage for perfect words |
-| 󱐋 **Spellweaver** | Magic | MP-based abilities, elemental attacks |
-| 󰞇 **Barbarian** | Damage | High attack, lower defense |
-| 󰊤 **Trickster** | Critical | High crit chance, risky but rewarding |
+| Class | HP | MP | Specialty |
+|-------|----|----|-----------|
+| **Wordsmith** | 100 | 50 | Balanced fighter, +10% damage |
+| **Scribe** | 80 | 80 | Double XP, starts with Analyze |
+| **Spellweaver** | 70 | 100 | Magic focus, +20% spell damage |
+| **Barbarian** | 150 | 20 | High HP, +30% crit chance |
+| **Trickster** | 90 | 60 | Combo master, +50% combo bonus |
 
 ---
 
@@ -236,39 +181,40 @@ Clear 10 floors to achieve victory. Death means starting over (it's a roguelike!
 
 ```
 src/
-├── main.rs              # Game loop & input handling
+├── main.rs           # Entry point, game loop
 ├── game/
-│   ├── state.rs         # GameState, Scene management
-│   ├── player.rs        # Player stats, classes, leveling
-│   ├── enemy.rs         # Enemy types, AI, spawning
-│   ├── combat.rs        # Combat state machine
-│   ├── combat_engine.rs # Event-driven combat system
-│   ├── combat_events.rs # Combat event types
-│   ├── dungeon.rs       # Floor generation, room types
-│   ├── items.rs         # Equipment, consumables, relics
-│   ├── spells.rs        # Magic system
-│   ├── events.rs        # Random encounter events
-│   ├── skills.rs        # Skill trees, abilities
-│   ├── narrative.rs     # Story, dialogue, factions
-│   ├── quests.rs        # Quest system
-│   ├── save.rs          # Save/load functionality
-│   ├── config.rs        # Game configuration
-│   └── stats.rs         # Statistics & achievements
+│   ├── state.rs      # Core game state machine
+│   ├── player.rs     # Player stats, inventory
+│   ├── combat.rs     # Typing combat system
+│   ├── combat_engine.rs  # Event-driven combat
+│   ├── enemy.rs      # Enemy definitions
+│   ├── dungeon.rs    # Floor generation
+│   ├── items.rs      # Balatro-style items & jokers
+│   ├── spells.rs     # Magic system
+│   ├── skills.rs     # Skill trees
+│   ├── events.rs     # Random encounters
+│   ├── narrative.rs  # Story & dialogue
+│   ├── quests.rs     # Quest system
+│   ├── world.rs      # Lore & locations
+│   ├── characters.rs # NPCs
+│   ├── stats.rs      # Achievement tracking
+│   ├── save.rs       # Save/load system
+│   └── config.rs     # Game configuration
 ├── data/
-│   ├── sentences.rs     # Typing content database
-│   ├── word_lists.rs    # Categorized word pools
-│   └── enemies.rs       # Enemy templates
+│   ├── word_lists.rs # Typing word pools
+│   ├── sentences.rs  # Boss phrases
+│   └── enemies.rs    # Enemy database
 └── ui/
-    └── render.rs        # TUI rendering with ratatui
+    └── render.rs     # Ratatui TUI rendering
 ```
 
-### Module Overview
+### Key Systems
 
-| Module | Purpose |
-|--------|---------|
-| `state.rs` | Core game state, scene transitions |
-| `combat_engine.rs` | Event-driven combat (returns events, no side effects) |
-| `config.rs` | Difficulty presets, typing parameters |
+| System | File | Description |
+|--------|------|-------------|
+| `GameState` | `state.rs` | Central state machine with scenes |
+| `CombatEngine` | `combat_engine.rs` | Event-driven combat with subscribers |
+| `GameData` | `data/mod.rs` | Data-driven content system |
 | `stats.rs` | Achievement tracking, performance metrics |
 | `save.rs` | RON-based save/load system |
 
@@ -326,6 +272,6 @@ MIT License - See [LICENSE](LICENSE) for details.
 
 ---
 
-**Type fast. Fight hard. Save the realm.** ⚔️
+**Type fast. Fight hard. Save the realm.** 󰓥
 
-Original work by Dr. Baklava • [github.com/cd4u2b0z](https://github.com/cd4u2b0z) • 2026
+Original work by **Dr. Baklava** • [github.com/cd4u2b0z](https://github.com/cd4u2b0z) • 2026
