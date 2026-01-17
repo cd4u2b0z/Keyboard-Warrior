@@ -1,6 +1,6 @@
 [package]
 name = "typingquest"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2021"
 authors = ["Craig"]
 description = "A narrative roguelike typing RPG - discover ancient mysteries through the rhythm of your keystrokes"

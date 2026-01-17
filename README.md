@@ -1,461 +1,250 @@
 # 󰓥 TypingQuest
 
-**A narrative roguelike typing RPG — discover ancient mysteries through the rhythm of your keystrokes.**
+**A roguelike typing RPG for the terminal — defeat enemies through the rhythm of your keystrokes.**
 
 [![Rust](https://img.shields.io/badge/Rust-1.70+-DEA584?style=flat&logo=rust&logoColor=white)](https://www.rust-lang.org/)
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat)](LICENSE)
-[![Version](https://img.shields.io/badge/Version-0.2.0-blue?style=flat)]()
-[![Lines of Code](https://img.shields.io/badge/Lines-20k+-yellow?style=flat)]()
+[![Version](https://img.shields.io/badge/Version-0.2.1-blue?style=flat)](CHANGELOG.md)
+[![Status](https://img.shields.io/badge/Status-Active_Development-orange?style=flat)]()
 [![TUI](https://img.shields.io/badge/TUI-ratatui-purple?style=flat)](https://github.com/ratatui-org/ratatui)
 
-TypingQuest combines the satisfying mechanics of typing trainers like [ttyper](https://github.com/max-niederman/ttyper) with deep RPG progression inspired by *Undertale*, *Earthbound*, *Balatro*, *Hades*, and classic roguelikes.
+---
 
-```
-╔══════════════════════════════════════════════════════════════════════════╗
-║  TypingQuest v0.2.0                          Chapter: Discovery          ║
-║  ═══════════════════════════════════════════════════════════════════════ ║
-║                                                                          ║
-║   ╭───────────╮                    ╭───────────╮                         ║
-║   │    YOU    │      󰓥  vs 󰓥      │   󰚌 ELITE │                         ║
-║   │  Wordsmith│                    │Silent Warden│                       ║
-║   │ HP ████░░ │                    │ HP ██████░░ │                        ║
-║   │ MP ██████ │                    │             │                        ║
-║   ╰───────────╯                    ╰───────────╯                         ║
-║                                                                          ║
-║   ┌────────────────────────────────────────────────────────────────┐    ║
-║   │  "The threshold remembers all who cross it."                   │    ║
-║   │                                                                │    ║
-║   │  Type: "incantation of binding"                                │    ║
-║   │  >     incantation of b_                                       │    ║
-║   └────────────────────────────────────────────────────────────────┘    ║
-║                                                                          ║
-║   ╭─ FLOW ─────────╮  ╭─ COMBO ────────╮  ╭─ STATS ────────────────╮    ║
-║   │ 󰄀 TRANSCENDENT │  │ 󰈸 12x STREAK  │  │ WPM: 94  ACC: 98%      │    ║
-║   │ Crit +30%      │  │ DMG: 3.0x      │  │ 󰐀 Ink: 847            │    ║
-║   ╰────────────────╯  ╰────────────────╯  ╰────────────────────────╯    ║
-║                                                                          ║
-║   [Silent Order: ████████░░ Ally]  [Mystery: ██████░░ Tier 3/5]         ║
-╚══════════════════════════════════════════════════════════════════════════╝
-```
+## Vision
+
+TypingQuest is a typing game that *feels* like an RPG. Every keystroke has weight. Combos build momentum. Flow states reward consistency. The dungeon unfolds through your fingers.
+
+Inspired by [ttyper](https://github.com/max-niederman/ttyper), *Undertale*, *Balatro*, and *Hades*.
 
 ---
 
-## 󰧮 Table of Contents
-
-- [Features](#-features)
-- [Requirements](#-requirements)
-- [Quick Start](#-quick-start)
-- [Installation](#-installation)
-- [How to Play](#-how-to-play)
-- [Controls](#-controls)
-- [Classes](#-classes)
-- [Factions](#-factions)
-- [Architecture](#-architecture)
-- [Configuration](#-configuration)
-- [Roadmap](#-roadmap)
-- [License](#-license)
-- [Credits](#-credits)
-
----
-
-## 󰓎 Features
-
-### 󰴓 Deep Narrative Systems *(NEW in 0.2.0)*
-
-| Feature | Description |
-|---------|-------------|
-| 󰂺 Lore Discovery | Uncover fragments of ancient history as you type |
-| 󰒖 Five Factions | Silent Order, Echoing Choir, Merchants, Wardens, Void Touched |
-| 󰛓 Mystery Progression | Five-tier revelation system with multiple endings |
-| 󰘬 Character Bonds | Build relationships through repeated encounters |
-| 󰖟 World State | Your choices reshape faction territories and alliances |
-| 󰝚 Voiced Dialogue | 15+ authored NPC encounters with distinct personalities |
-
-### 󰌌 Typing Feel Engine *(NEW in 0.2.0)*
-
-| Feature | Description |
-|---------|-------------|
-| 󰒔 Flow States | Building → Flowing → Transcendent |
-| 󰈸 Combo System | Chain words for up to 3x damage multiplier |
-| 󰔊 Rhythm Detection | Cadence analysis affects critical hit chance |
-| 󰋖 Visual Feedback | Screen shake, color flash, text ripple effects |
-| 󰌓 Keystroke Feel | Every key press feels impactful and satisfying |
-
-### 󰆼 Meta-Progression *(NEW in 0.2.0)*
-
-| Feature | Description |
-|---------|-------------|
-| 󰐀 Ink Currency | Earn persistent currency from every run |
-| 󰓦 Unlock Tree | HP bonus, damage bonus, word preview, map reveal |
-| 󰄀 Lore Codex | Collected lore persists across deaths |
-| 󰘆 Achievements | Speed Demon, Perfectionist, True Ending, 10+ more |
-| 󰈅 Heat System | Hades-style difficulty modifiers for extra rewards |
-| 󰖟 NPC Bonds | Relationships deepen across multiple runs |
-
-### Core Features
-
-| Feature | Description |
-|---------|-------------|
-| 󰌌 Type-to-Attack | Your WPM is your weapon. Type words to deal damage |
-| 󰔊 Combo System | Build combos for multiplied damage |
-| 󰆥 5 Classes | Wordsmith, Scribe, Spellweaver, Barbarian, Trickster |
-| 󰙅 Roguelike | Procedural dungeons, permadeath tension |
-| 󰒓 Adaptive Difficulty | Game adjusts to your typing skill |
-| 󰆼 Deep Progression | Level up, learn skills, collect items |
-
-### Room Types
-
-| Type | Icon | Description |
-|------|------|-------------|
-| Combat | 󰓥 | Standard enemy encounters |
-| Elite | 󰚌 | Harder enemies, better rewards |
-| Boss | 󰮇 | Floor boss battles |
-| Treasure | 󰆧 | Free items and gold |
-| Shop | 󰒍 | Buy equipment and consumables |
-| Rest | 󰒲 | Heal, train, or meditate |
-| Event | 󰋗 | Random encounters with choices |
-
-### Combat Mechanics
-
-- **Speed Bonus** — Type faster for bonus damage
-- **Perfect Words** — No backspaces = damage multiplier
-- **Combo Streaks** — Chain words for escalating damage
-- **Accuracy Tracking** — Mistyped characters reduce effectiveness
-
----
-
-## 󰏖 Requirements
-
-### System Requirements
-
-| Requirement | Value |
-|-------------|-------|
-| OS | Linux, macOS, Windows |
-| Rust | 1.70+ |
-| Terminal | Unicode support required |
-| Display | Minimum 80x24 (120x40 recommended) |
-
-### Dependencies
-
-```toml
-ratatui = "0.28"      # TUI framework
-crossterm = "0.28"    # Terminal handling
-serde = "1.0"         # Serialization
-ron = "0.8"           # RON config format
-rand = "0.8"          # RNG
-better-panic = "0.3"  # Panic handling
-```
-
----
-
-## 󰔎 Quick Start
+## Quick Start
 
 ```bash
-# Clone and run
-git clone https://github.com/cd4u2b0z/typingquest.git
-cd typingquest
-cargo run --release
-
-# Or install globally
-cargo install --path .
-typingquest
-```
-
----
-
-## 󰏗 Installation
-
-### From Source
-
-```bash
+# Clone and build
 git clone https://github.com/cd4u2b0z/typingquest.git
 cd typingquest
 cargo build --release
+
+# Run the game
 ./target/release/typingquest
 ```
 
-### From crates.io (coming soon)
+**Requirements:**
+- Rust 1.70+ 
+- A terminal with Unicode support
+- [Nerd Font](https://www.nerdfonts.com/) recommended for icons
 
-```bash
-cargo install typingquest
+---
+
+## How It Plays
+
+```
+╭──────────────────────────────────────────────────────────────────╮
+│  ◈═══════════════════════════════════════════════════════════◈  │
+│    ████████╗██╗   ██╗██████╗ ██╗███╗   ██╗ ██████╗              │
+│       ██║    ╚████╔╝ ██████╔╝██║██╔██╗ ██║██║  ███╗             │
+│       ██║     ╚██╔╝  ██╔═══╝ ██║██║╚██╗██║██║   ██║             │
+│       ╚═╝      ╚═╝   ╚═╝     ╚═╝╚═╝  ╚═══╝ ╚═════╝  QUEST  󰌌   │
+│  ◈═══════════════════════════════════════════════════════════◈  │
+╰──────────────────────────────────────────────────────────────────╯
 ```
 
+### Core Loop
+
+1. **Explore** — Navigate a 10-floor dungeon with procedural rooms
+2. **Fight** — Type words to attack enemies; accuracy and speed deal damage
+3. **Grow** — Level up, find items, learn spells, build your character
+4. **Die** — Roguelike permadeath with meta-progression between runs
+
+### Combat
+
+Words appear. You type them. Damage happens.
+
+- **Correct characters** flash green; errors flash red
+- **Combos** build with consecutive correct words (up to 3x damage)
+- **Flow states** reward consistent typing rhythm
+- **Time pressure** adds urgency without being punishing
+
+### Exploration
+
+Each floor contains rooms: combat encounters, elite enemies, shops, rest sites, treasure, and random events. Choose your path. Manage your resources. Reach the boss.
+
 ---
 
-## 󰊗 How to Play
-
-1. **Select a class** — Each has unique abilities and playstyles
-2. **Descend the dungeon** — 10 procedurally generated floors
-3. **Type to fight** — Words appear, type them quickly and accurately
-4. **Manage resources** — HP, MP, gold, and items
-5. **Level up** — Gain XP, unlock skills, find equipment
-6. **Defeat the boss** — Each floor ends with a boss battle
-
----
-
-## 󰌌 Controls
+## Controls
 
 | Key | Action |
 |-----|--------|
-| `a-z` | Type characters |
-| `Backspace` | Delete character |
-| `Enter` | Confirm selection |
-| `Esc` | Cancel/Back |
-| `j/k` | Navigate menus |
-| `i` | Open inventory |
-| `s` | View stats |
-| `q` | Quit game |
+| `j/k` or `↑/↓` | Navigate menus |
+| `Enter` or `e` | Confirm / Explore |
+| `Backspace` | Fix typing errors |
+| `Esc` | Back / Flee combat |
+| `?` | Toggle help overlay |
+| `i` | Inventory |
+| `s` | Character stats |
 
 ---
 
-## 󰆥 Classes
+## Classes
 
-| Class | HP | MP | Specialty |
-|-------|----|----|-----------|
-| **Wordsmith** | 100 | 50 | Balanced fighter, +10% damage |
-| **Scribe** | 80 | 80 | Double XP, starts with Analyze |
-| **Spellweaver** | 70 | 100 | Magic focus, +20% spell damage |
-| **Barbarian** | 150 | 20 | High HP, +30% crit chance |
-| **Trickster** | 90 | 60 | Combo master, +50% combo bonus |
-
----
-
-## 󰒖 Factions
-
-Your choices shape your standing with the five factions that control the realm:
-
-| Faction | Philosophy | Ally | Enemy |
-|---------|------------|------|-------|
-| 󰂵 **Silent Order** | Knowledge through observation | Wardens | Choir |
-| 󰋾 **Echoing Choir** | Truth through prophecy | Void Touched | Silent Order |
-| 󰆧 **Gilded Merchants** | Power through commerce | — | — |
-| 󰛡 **Threshold Wardens** | Protection at any cost | Silent Order | Void Touched |
-| 󰚌 **Void Touched** | Embrace dissolution | Choir | Wardens |
-
-**Reputation Effects:**
-- **Ally (50+)**: Exclusive encounters, discounts, quest access
-- **Neutral (0)**: Standard interactions
-- **Hostile (-50)**: Ambushes, closed doors, harder negotiations
-
-Your faction standings influence which of the **12 endings** you can achieve.
+| Class | Style | Strength |
+|-------|-------|----------|
+| 󰜁 **Wordsmith** | Balanced | +10% damage, starts with Heal |
+| 󰯂 **Scribe** | Spellcaster | +25% MP, faster spell learning |
+| 󰺝 **Spellweaver** | Glass cannon | +50% spell damage, -20% HP |
+| 󰓥 **Barbarian** | Tank | +30% HP, +15% damage, no spells |
+| 󰗎 **Trickster** | Luck-based | Random bonuses, critical hits |
 
 ---
 
-## 󰙅 Architecture
+## Features
+
+### Implemented (v0.2.1)
+
+**Core Gameplay**
+- 5 playable classes with distinct mechanics
+- 10-floor dungeon with procedural room generation
+- Typing-based combat with real-time feedback
+- Item system — equipment, consumables, relics
+- Spell system — elemental magic with MP costs
+- Shop, rest, treasure, and event encounters
+
+**Game Feel (Phase 3)**
+- Combo system with damage multipliers (up to 3x)
+- Flow states: Building → Flowing → Transcendent
+- WPM and accuracy tracking
+- Visual feedback for typing performance
+
+**UI Polish (Phase 4)**
+- Consistent visual theme with semantic colors
+- 40+ Nerd Font icons throughout
+- Contextual help system with tips
+- Interactive tutorial for new players
+
+**Narrative Foundation**
+- Five factions with distinct philosophies
+- Lore fragments discoverable through gameplay
+- NPC encounters with authored dialogue
+- Mystery progression system (framework)
+
+### In Progress
+
+- Save/load functionality
+- Full meta-progression loop
+- Sound effects
+- Content expansion and balancing
+
+---
+
+## Project Structure
 
 ```
 typingquest/
-├── Cargo.toml                    # Dependencies & metadata
-├── README.md                     # This file
-├── CHANGELOG.md                  # Version history
-├── data/
-│   ├── enemies.toml              # Enemy definitions
-│   └── config.ron                # Game configuration
-│
-└── src/
-    ├── main.rs                   # Entry point (533 lines)
-    │
-    ├── game/                     # 󰓎 CORE SYSTEMS (~15,000 lines)
-    │   ├── mod.rs                # Module exports
-    │   │
-    │   │── # 󰎇 Narrative Layer
-    │   ├── deep_lore.rs          # Cosmology, endings (1,200 lines)
-    │   ├── lore_fragments.rs     # Discoverable lore (900 lines)
-    │   ├── encounter_writing.rs  # Authored encounters (1,000 lines)
-    │   ├── writing_guidelines.rs # Literary standards (650 lines)
-    │   ├── narrative_integration.rs # Engine coordinator (600 lines)
-    │   ├── narrative_seed.rs     # Procedural narrative (900 lines)
-    │   ├── faction_system.rs     # 5 factions (815 lines)
-    │   ├── voice_system.rs       # NPC personalities (800 lines)
-    │   ├── narrative.rs          # Base narrative (600 lines)
-    │   │
-    │   │── # 󰌌 Typing Systems
-    │   ├── typing_feel.rs        # Flow & combos (450 lines)
-    │   ├── typing_context.rs     # Context analysis (650 lines)
-    │   ├── combat.rs             # Typing combat (370 lines)
-    │   ├── combat_engine.rs      # Event-driven (420 lines)
-    │   ├── combat_events.rs      # Combat events (200 lines)
-    │   │
-    │   │── # 󰆧 Progression
-    │   ├── meta_progression.rs   # Hades-style unlocks (650 lines)
-    │   ├── run_modifiers.rs      # Heat system (630 lines)
-    │   ├── stats.rs              # Achievements (450 lines)
-    │   ├── skills.rs             # Skill trees (550 lines)
-    │   │
-    │   │── # 󰊗 Core Game
-    │   ├── state.rs              # Game state machine (150 lines)
-    │   ├── player.rs             # Player data (270 lines)
-    │   ├── enemy.rs              # Enemy system (400 lines)
-    │   ├── dungeon.rs            # Floor generation (220 lines)
-    │   ├── items.rs              # Items & relics (480 lines)
-    │   ├── spells.rs             # Magic system (260 lines)
-    │   ├── events.rs             # Random events (320 lines)
-    │   ├── quests.rs             # Quest system (420 lines)
-    │   ├── characters.rs         # NPCs (370 lines)
-    │   ├── world.rs              # World/locations (700 lines)
-    │   ├── world_engine.rs       # World state (270 lines)
-    │   ├── event_bus.rs          # Event system (500 lines)
-    │   ├── save.rs               # Save/load (220 lines)
-    │   └── config.rs             # Configuration (320 lines)
-    │
-    ├── data/                     # 󰆼 CONTENT (~2,500 lines)
-    │   ├── mod.rs                # Data exports
-    │   ├── word_lists.rs         # Typing pools (200 lines)
-    │   ├── sentences.rs          # Boss phrases (600 lines)
-    │   └── enemies.rs            # Enemy database (520 lines)
-    │
-    └── ui/                       # 󰍹 RENDERING (~700 lines)
-        ├── mod.rs                # UI exports
-        └── render.rs             # Ratatui TUI (690 lines)
-
-Total: ~20,000 lines of Rust across 37 source files
+├── src/
+│   ├── main.rs              # Game loop, input handling (~600 lines)
+│   ├── game/
+│   │   ├── state.rs         # Core game state
+│   │   ├── combat.rs        # Combat mechanics
+│   │   ├── combat_engine.rs # Combat calculation
+│   │   ├── player.rs        # Player/class definitions
+│   │   ├── enemy.rs         # Enemy definitions
+│   │   ├── dungeon.rs       # Floor/room generation
+│   │   ├── items.rs         # Item system
+│   │   ├── spells.rs        # Spell system
+│   │   ├── typing_feel.rs   # Combo/flow/feedback (~550 lines)
+│   │   ├── tutorial.rs      # Tutorial system (~650 lines)
+│   │   ├── help_system.rs   # Help overlay (~750 lines)
+│   │   └── ...              # Narrative, factions, events
+│   ├── ui/
+│   │   ├── render.rs        # All screen rendering (~1300 lines)
+│   │   └── theme.rs         # Colors, icons, styles (~350 lines)
+│   └── data/
+│       └── words.rs         # Word lists
+├── Cargo.toml
+├── CHANGELOG.md
+└── README.md
 ```
 
-### Key Systems
+**~21,500 lines of Rust** across 35+ source files.
 
-| System | File | LOC | Description |
-|--------|------|-----|-------------|
-| Narrative Engine | `narrative_integration.rs` | ~600 | Coordinates all story systems |
-| Deep Lore | `deep_lore.rs` | ~1,200 | Cosmology, faction histories, endings |
-| Typing Feel | `typing_feel.rs` | ~450 | Flow states, combos, visual effects |
-| Meta Progression | `meta_progression.rs` | ~650 | Persistent unlocks, achievements |
-| Faction System | `faction_system.rs` | ~815 | Five factions with relationships |
-| Voice System | `voice_system.rs` | ~800 | NPC dialogue with personalities |
-| Narrative Seed | `narrative_seed.rs` | ~900 | Procedural narrative generation |
-| Event Bus | `event_bus.rs` | ~500 | Game-wide event system |
-| Combat Engine | `combat_engine.rs` | ~420 | Event-driven typing combat |
+---
 
-### System Architecture
+## Roadmap
 
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                           TYPINGQUEST v0.2.0                                │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│  ┌─────────────────────── NARRATIVE LAYER ───────────────────────┐         │
-│  │                                                                │         │
-│  │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────────┐  │         │
-│  │  │ DeepLore │  │ Factions │  │  Voice   │  │    Lore      │  │         │
-│  │  │  System  │  │  System  │  │  System  │  │  Fragments   │  │         │
-│  │  │ 12 ends  │  │ 5 groups │  │ 15+ NPCs │  │ 13+ pieces   │  │         │
-│  │  └────┬─────┘  └────┬─────┘  └────┬─────┘  └──────┬───────┘  │         │
-│  │       └─────────────┴─────────────┴───────────────┘           │         │
-│  │                           │                                    │         │
-│  │              ┌────────────┴────────────┐                      │         │
-│  │              │   NarrativeEngine       │                      │         │
-│  │              │  Chapter • Mystery •    │                      │         │
-│  │              │  Encounters • Bonds     │                      │         │
-│  │              └────────────┬────────────┘                      │         │
-│  └───────────────────────────┼───────────────────────────────────┘         │
-│                              │                                              │
-│  ┌───────────────────────────┴────────────── TYPING LAYER ──────┐         │
-│  │                                                               │         │
-│  │  ┌────────────────┐  ┌────────────────┐  ┌────────────────┐  │         │
-│  │  │   FlowState    │  │     Combo      │  │    Rhythm      │  │         │
-│  │  │ Building →     │  │   1x → 3x      │  │   Cadence      │  │         │
-│  │  │ Transcendent   │  │   multiplier   │  │   Analysis     │  │         │
-│  │  └───────┬────────┘  └───────┬────────┘  └───────┬────────┘  │         │
-│  │          └───────────────────┼───────────────────┘           │         │
-│  │                              │                                │         │
-│  │              ┌───────────────┴───────────────┐               │         │
-│  │              │      TypingFeel Engine        │               │         │
-│  │              │   Visual FX • Crit Chance     │               │         │
-│  │              └───────────────┬───────────────┘               │         │
-│  └──────────────────────────────┼───────────────────────────────┘         │
-│                                 │                                          │
-│  ┌──────────────────────────────┴─── PERSISTENCE LAYER ─────────┐         │
-│  │                                                               │         │
-│  │  ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────┐         │         │
-│  │  │   Ink   │  │ Unlocks │  │  Codex  │  │  Heat   │         │         │
-│  │  │ Currency│  │  Tree   │  │  Lore   │  │ System  │         │         │
-│  │  └────┬────┘  └────┬────┘  └────┬────┘  └────┬────┘         │         │
-│  │       └────────────┴────────────┴────────────┘              │         │
-│  │                           │                                  │         │
-│  │              ┌────────────┴────────────┐                    │         │
-│  │              │     MetaProgression     │                    │         │
-│  │              │  Survives permadeath    │                    │         │
-│  │              └─────────────────────────┘                    │         │
-│  └──────────────────────────────────────────────────────────────┘         │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
+### v0.3.0 — Persistence
+- [ ] Save/load game state
+- [ ] Meta-progression currency (Ink) persistence
+- [ ] Settings configuration
+
+### v0.4.0 — Content
+- [ ] More enemy variety per floor
+- [ ] Additional spells and items
+- [ ] Expanded event encounters
+- [ ] Achievement tracking
+
+### v0.5.0 — Balance
+- [ ] Difficulty tuning
+- [ ] Class balance pass
+- [ ] Pacing adjustments
+
+### v1.0.0 — Release
+- [ ] Complete 10-floor campaign
+- [ ] Multiple endings
+- [ ] Full documentation
+
+---
+
+## Building
+
+```bash
+# Development build
+cargo build
+
+# Release build (optimized, ~1.5MB binary)
+cargo build --release
+
+# Run directly
+cargo run --release
+
+# Check for errors without building
+cargo check
 ```
 
 ---
 
-## 󰒓 Configuration
+## Contributing
 
-### Difficulty Presets
+TypingQuest is a personal project in active development. Issues and suggestions welcome.
 
-| Preset | Description |
-|--------|-------------|
-| **Story** | Relaxed mode for narrative enjoyment |
-| **Normal** | Standard challenge with adaptive difficulty |
-| **Hard** | For experienced typists seeking challenge |
-| **Ironman** | Permadeath, no saves — true roguelike |
-
-### Config Location
-
-```
-~/.config/typingquest/config.ron    # Linux
-~/Library/Application Support/typingquest/config.ron  # macOS
-```
+To contribute:
+1. Open an issue describing the proposed change
+2. Fork and create a feature branch
+3. Submit a focused PR with clear description
 
 ---
 
-## 󰋚 Roadmap
+## License
 
-- [x] Core game loop
-- [x] 5 playable classes
-- [x] Combat with typing mechanics
-- [x] Dungeon progression (10 floors)
-- [x] Items, equipment, relics
-- [x] Event system with choices
-- [x] Save/load system
-- [x] Configuration system
-- [x] Statistics & achievements
-- [x] **Deep narrative systems** *(0.2.0)*
-- [x] **Faction reputation & relationships** *(0.2.0)*
-- [x] **Typing feel engine** *(0.2.0)*
-- [x] **Meta-progression (Hades-style)** *(0.2.0)*
-- [x] **Lore codex & mystery system** *(0.2.0)*
-- [x] **NPC bonds across runs** *(0.2.0)*
-- [ ] Sound effects (rodio integration)
-- [ ] External content files (JSON/RON)
-- [ ] Multiplayer typing races
-- [ ] Steam/itch.io release
+MIT License. See [LICENSE](LICENSE) for details.
 
 ---
 
-## 󰈙 License
+## Credits
 
-MIT License - See [LICENSE](LICENSE) for details.
+**TypingQuest** — Original work by Craig
 
----
-
-## 󱗗 Credits
-
+Built with:
 - [ratatui](https://github.com/ratatui-org/ratatui) — Terminal UI framework
-- [ttyper](https://github.com/max-niederman/ttyper) — Typing test inspiration
-- *Undertale*, *Earthbound*, *Balatro* — Gameplay & aesthetic inspiration
+- [crossterm](https://github.com/crossterm-rs/crossterm) — Terminal manipulation
+- [Nerd Fonts](https://www.nerdfonts.com/) — Icons
+
+Inspired by:
+- [ttyper](https://github.com/max-niederman/ttyper) — Terminal typing
+- *Undertale* — Personality and charm
+- *Hades* — Meta-progression
+- *Balatro* — Satisfying feedback
 
 ---
 
-**Type fast. Fight hard. Discover the truth.** 󰓥
-
-Original work by **Dr. Baklava** • [github.com/cd4u2b0z](https://github.com/cd4u2b0z) • 2025
-
----
-
-<details>
-<summary><strong>󰄪 Project Stats</strong></summary>
-
-- **Total Lines of Code:** ~20,000
-- **Rust Source Files:** 35+
-- **Major Systems:** 9
-- **Authored NPC Encounters:** 15+
-- **Lore Fragments:** 13+
-- **Playable Classes:** 5
-- **Factions:** 5
-- **Endings:** 12
-
-</details>
+*󰩛 Dr. Baklava was here*

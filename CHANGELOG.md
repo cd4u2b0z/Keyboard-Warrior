@@ -2,106 +2,175 @@
 
 All notable changes to TypingQuest will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
-## [0.2.0] - 2025-01-18
+### Planned
+- Save/load game state
+- Meta-progression persistence
+- Sound effects (terminal bells)
+- Additional enemy types
 
-### 󰎇 Deep Narrative Systems
-- **DeepLore System** (`deep_lore.rs`, ~700 lines)
-  - Complete cosmology: The Silence, The Syntax, the world's creation
-  - Five faction histories with detailed backstories
-  - Player mystery: discover why you arrived at the threshold
-  - 12 unique endings based on faction allegiance and choices
-  - Hidden truth revelation system with 5 tiers
+---
 
-- **Lore Fragments** (`lore_fragments.rs`, ~500 lines)
-  - 13+ authored lore fragments discoverable through gameplay
-  - Fragment types: Inscription, Prophecy, Memory, Teaching, Warning
-  - Rarity system affecting discovery chance
-  - Fragments persist in Lore Codex across runs
-
-- **Encounter Writing** (`encounter_writing.rs`, ~600 lines)
-  - 8+ fully authored NPC encounters with branching dialogue
-  - Characters: Silent Keeper Mira, Void Scholar Kael, etc.
-  - Location-specific atmospheric writing
-  - Multiple dialogue options with faction consequences
-
-- **Writing Guidelines** (`writing_guidelines.rs`, ~400 lines)
-  - Literary standards for consistent tone
-  - Location-specific atmosphere rules
-  - Character voice patterns
-
-### 󰌹 Narrative Integration
-- **NarrativeEngine** (`narrative_integration.rs`, ~550 lines)
-  - Coordinates all story systems into unified experience
-  - Chapter progression: Awakening → Discovery → Revelation → Allegiance → Conflict → Reckoning
-  - Weighted encounter selection based on story state
-  - Mystery progress tracking with revelation thresholds
-  - Faction reputation with consequence events at thresholds
-
-### 󰌌 Typing Feel Engine
-- **TypingFeel System** (`typing_feel.rs`, ~450 lines)
-  - Flow states: Building → Flowing → Transcendent
-  - Combo system with decay timer (up to 3x multiplier)
-  - Rhythm detection analyzing keystroke cadence
-  - Critical hit chance tied to flow state (30% in Transcendent)
-  - Visual effects: screen shake, color flash, text ripple
-  - Perfect word tracking for bonus damage
-
-### 󰆧 Meta-Progression (Hades-Style)
-- **MetaProgress System** (`meta_progression.rs`, ~650 lines)
-  - Ink currency earned from every run (persists through death)
-  - 7-node unlock tree: HP bonus, gold bonus, time bonus, damage bonus, word preview, map reveal, dialogue memory
-  - Lore Codex persists collected fragments across runs
-  - NPC Bond levels: Stranger → Acquaintance → Familiar → Friend → Bonded
-  - 10+ achievements: speed_demon, perfectionist, pacifist, true_ending, etc.
-  - Heat system for increased difficulty with better rewards
-
-### 󰛡 Enhanced Faction System
-- **Five Factions** with deep relationships:
-  - The Silent Order (monks of careful observation)
-  - The Echoing Choir (prophets speaking impossible truths)
-  - The Gilded Merchants (traders in dangerous knowledge)
-  - The Threshold Wardens (guardians against the void)
-  - The Void Touched (those who embraced dissolution)
-- Faction reputation affects available encounters and endings
-- Cross-faction relationships (allies, rivals, enemies)
-
-### 󰗚 Voice System
-- **15+ Authored NPCs** (`voice_system.rs`, ~800 lines)
-  - Each character has distinct vocabulary, cadence, concerns
-  - Dialogue adapts based on faction standing and mystery progress
-  - Memorable characters with recurring appearances
-
-### Technical
-- **~20,000 lines of Rust** (up from ~8,000 in 0.1.0)
-- **35+ source files** with clean module organization
-- **9 major interconnected systems**
-- All systems compile cleanly with no warnings
-
-## [0.1.0] - 2025-01-17
+## [0.2.1] - 2026-01-17
 
 ### Added
-- Initial release
-- Core game loop with scene-based state management
-- 5 playable classes: Wordsmith, Scribe, Spellweaver, Barbarian, Trickster
-- Combat system with typing-based attacks
-- Dungeon exploration with procedural room generation
-- Room types: Combat, Elite, Boss, Treasure, Shop, Rest, Event
-- Item system with consumables, equipment, and relics
-- Spell system with elemental magic
-- Event system with branching choices
-- Skill trees and character progression
-- Narrative system with factions and dialogue
-- Quest system
-- TUI rendering with ratatui
+- **Phase 4: Visual Identity**
+  - New theme system (`theme.rs`, ~350 lines)
+  - Semantic color palette (PRIMARY, SECONDARY, ACCENT, SUCCESS, WARNING, DANGER)
+  - 40+ Nerd Font icons for UI elements
+  - Border style presets (SINGLE, DOUBLE, ROUNDED, HEAVY)
+  - Style helpers: `hp_color()`, `combo_color()`, `wpm_color()`, `accuracy_color()`
+
+### Changed
+- Title screen enhanced with rounded borders and decorative elements
+- All panel titles now include themed icons
+- Menu items display with contextual icons
+- Game over and victory screens polished with icons and styled buttons
+- Consistent color theming applied to all 11 screens
+
+### Fixed
+- Help key (`h`) no longer triggers during combat typing
+- Dungeon navigation hint now clearly shows `[Enter/e] EXPLORE`
+- Combat help hint changed from `[h]` to `[?]` for consistency
+
+---
+
+## [0.2.0] - 2026-01-17
+
+### Added
+- **Phase 1: Help System** (`help_system.rs`, ~750 lines)
+  - Four-tab help overlay: Contextual, Keybindings, Objectives, Mechanics
+  - Context-aware tips that change based on current scene
+  - Tip priority system (Essential, Important, Advanced, Secret)
+  - Scrollable content with keyboard navigation
+  - Hint manager for timed contextual messages
+
+- **Phase 2: Tutorial System** (`tutorial.rs`, ~650 lines)
+  - Five-phase interactive tutorial
+  - Phases: Awakening, First Strike, The Combo, Choice, Discovery
+  - Narrative-integrated teaching (not just instructions)
+  - Progress tracking with visual feedback
+  - Skippable steps for returning players
+
+- **Phase 3: Game Feel** (`typing_feel.rs`, ~550 lines)
+  - Flow states: Building → Flowing → Transcendent
+  - Combo system with damage multipliers (up to 3x)
+  - Rhythm detection analyzing keystroke cadence
+  - WPM and accuracy tracking with visual display
+  - Screen shake trigger on enemy attacks
+  - Color flash and visual feedback systems
+
+- **Narrative Systems** (multiple files, ~4000 lines)
+  - Deep lore system with world cosmology
+  - Five factions: Silent Order, Echoing Choir, Merchants, Wardens, Void Touched
+  - Lore fragment discovery with rarity tiers
+  - Authored NPC encounters with distinct voices
+  - Mystery progression framework (5 tiers)
+  - Chapter-based story progression
+
+- **Meta-Progression Foundation** (`meta_progression.rs`, ~650 lines)
+  - Ink currency system (framework)
+  - Unlock tree structure
+  - Achievement definitions
+  - NPC bond tracking
+
+### Changed
+- Replaced all emojis with Nerd Font glyphs throughout codebase
+- Key hints added to all major screens
+- Combat typing feedback improved with clearer visual states
+
+### Technical
+- Codebase expanded to ~21,500 lines
+- 35+ source files with clean module organization
+- All systems compile cleanly with no warnings
+
+---
+
+## [0.1.0] - 2026-01-16
+
+### Added
+- **Core Game Loop**
+  - Scene-based state management (Title, ClassSelect, Dungeon, Combat, etc.)
+  - Main game loop with 50ms tick rate
+  - Clean terminal setup/teardown with crossterm
+
+- **Character System**
+  - 5 playable classes: Wordsmith, Scribe, Spellweaver, Barbarian, Trickster
+  - Stats: Strength, Intellect, Vitality, Dexterity, Luck
+  - Level progression with XP requirements
+  - HP/MP management
+
+- **Combat System**
+  - Typing-based attacks with real-time input
+  - Combo tracking for bonus damage
+  - Time pressure mechanic
+  - Enemy turn after word completion or timeout
+  - Victory/defeat conditions
+
+- **Dungeon System**
+  - 10-floor progression
+  - Procedural room generation
+  - Room types: Combat, Elite, Boss, Treasure, Shop, Rest, Event
+  - Floor difficulty scaling
+
+- **Item System**
+  - Equipment slots (weapon, armor, accessory)
+  - Consumable items (potions, scrolls)
+  - Relics with passive effects
+  - Rarity tiers: Common, Uncommon, Rare, Epic, Legendary
+
+- **Spell System**
+  - Elemental spells (Fire, Ice, Lightning, etc.)
+  - MP costs and cooldowns
+  - Damage calculation based on Intellect
+
+- **Event System**
+  - Random encounters with branching choices
+  - Consequences affecting player state
+  - ASCII art for event scenes
+
+- **Shop System**
+  - Purchasable items with gold currency
+  - Dynamic inventory
+
+- **Rest System**
+  - HP restoration
+  - MP restoration  
+  - XP training option
+
+- **UI Rendering**
+  - Full TUI with ratatui
+  - 11 distinct screens
+  - HP/MP gauges
+  - Battle log
+  - ASCII art for enemies and events
 
 ### Technical
 - Rust 2021 edition
-- ratatui 0.28 for terminal UI
-- crossterm 0.28 for input/terminal control
-- serde for serialization
+- Dependencies: ratatui 0.28, crossterm 0.28, serde, rand, better_panic
+- ~8,000 lines of Rust
 - Release binary: ~1.4MB (optimized + stripped)
+
+---
+
+## Version Scheme
+
+This project uses [Semantic Versioning](https://semver.org/):
+
+- **MAJOR** (1.x.x): Breaking changes or feature-complete release
+- **MINOR** (0.x.0): New features, systems, or significant additions
+- **PATCH** (0.0.x): Bug fixes, polish, and refinements
+
+Current status: **Pre-release** (0.x.x) — Core systems functional, content and polish ongoing.
+
+---
+
+## Links
+
+- [Repository](https://github.com/cd4u2b0z/typingquest)
+- [README](README.md)
+- [License](LICENSE)
