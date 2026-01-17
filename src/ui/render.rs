@@ -372,7 +372,7 @@ fn render_title(f: &mut Frame, state: &GameState) {
         Span::raw("Navigate  "),
         Span::styled("[Enter] ", Style::default().fg(Color::Yellow)),
         Span::raw("Select  "),
-        Span::styled("[h] ", Style::default().fg(Color::Cyan)),
+        Span::styled("[?] ", Style::default().fg(Color::Cyan)),
         Span::raw("Help  "),
         Span::styled("[q] ", Style::default().fg(Color::Red)),
         Span::raw("Quit"),
@@ -442,7 +442,7 @@ fn render_class_select(f: &mut Frame, state: &GameState) {
         Span::raw("Select  "),
         Span::styled("[Esc] ", Style::default().fg(Color::Yellow)),
         Span::raw("Back  "),
-        Span::styled("[h] ", Style::default().fg(Color::Cyan)),
+        Span::styled("[?] ", Style::default().fg(Color::Cyan)),
         Span::raw("Help"),
     ]))
     .alignment(Alignment::Center)
@@ -515,15 +515,15 @@ fn render_dungeon(f: &mut Frame, state: &GameState) {
         .block(Block::default().borders(Borders::ALL).title(" Log "));
     f.render_widget(log, chunks[3]);
 
-    // Key hints at bottom
+    // Key hints at bottom - make EXPLORE very prominent
     let hints = Paragraph::new(Line::from(vec![
-        Span::styled(" [e] ", Style::default().fg(Color::Yellow)),
-        Span::raw("Explore  "),
+        Span::styled(" [Enter/e] ", Style::default().fg(Color::Green).add_modifier(Modifier::BOLD)),
+        Span::styled("EXPLORE ", Style::default().fg(Color::Green).add_modifier(Modifier::BOLD)),
         Span::styled("[i] ", Style::default().fg(Color::Yellow)),
         Span::raw("Inventory  "),
         Span::styled("[s] ", Style::default().fg(Color::Yellow)),
         Span::raw("Stats  "),
-        Span::styled("[h] ", Style::default().fg(Color::Cyan)),
+        Span::styled("[?] ", Style::default().fg(Color::Cyan)),
         Span::raw("Help  "),
         Span::styled("[q] ", Style::default().fg(Color::Red)),
         Span::raw("Quit"),
@@ -656,7 +656,7 @@ fn render_combat(f: &mut Frame, state: &GameState) {
             Span::raw("Fix  "),
             Span::styled("[Esc] ", Style::default().fg(Color::Red)),
             Span::raw("Flee  "),
-            Span::styled("[h] ", Style::default().fg(Color::Cyan)),
+            Span::styled("[?] ", Style::default().fg(Color::Cyan)),
             Span::raw("Help"),
         ]))
         .alignment(Alignment::Center)

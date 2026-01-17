@@ -120,9 +120,15 @@ fn handle_input(game: &mut GameState, key: KeyCode) -> InputResult {
         return handle_help_input(game, key);
     }
     
-    // Global help toggle (? or h)
+    // Global help toggle (? only during combat/tutorial, h elsewhere)
+    // During combat/tutorial, 'h' should go to typing, not help
+    let in_typing_mode = matches!(game.scene, Scene::Combat | Scene::Tutorial);
     match key {
-        KeyCode::Char('?') | KeyCode::Char('h') => {
+        KeyCode::Char('?') => {
+            game.help_system.toggle();
+            return InputResult::Continue;
+        }
+        KeyCode::Char('h') if !in_typing_mode => {
             game.help_system.toggle();
             return InputResult::Continue;
         }
