@@ -1,16 +1,18 @@
 //! Terminal UI rendering using ratatui
 
 use ratatui::{
-    layout::{Constraint, Direction, Layout, Alignment},
+    layout::{Constraint, Direction, Layout, Alignment, Rect},
     style::{Color, Modifier, Style},
     text::{Line, Span},
-    widgets::{Block, Borders, Gauge, List, ListItem, Paragraph, Wrap},
+    widgets::{Block, Borders, Gauge, List, ListItem, Paragraph, Wrap, Clear, Tabs},
     Frame,
 };
 use crate::game::state::{GameState, Scene};
 use crate::game::combat::CombatPhase;
+use crate::game::help_system::{HelpSystem, HelpTab, TipPriority};
 
 pub fn render(f: &mut Frame, state: &GameState) {
+    // Render the main scene
     match state.scene {
         Scene::Title => render_title(f, state),
         Scene::ClassSelect => render_class_select(f, state),
@@ -24,6 +26,285 @@ pub fn render(f: &mut Frame, state: &GameState) {
         Scene::GameOver => render_game_over(f, state),
         Scene::Victory => render_victory(f, state),
     }
+    
+    // Render help overlay on top if visible
+    if state.help_system.visible {
+        render_help_overlay(f, &state.help_system, state);
+    }
+    
+    // Always render bottom bar with hint or help reminder
+    render_bottom_bar(f, state);
+}
+
+/// Render the help overlay as a centered popup
+fn render_help_overlay(f: &mut Frame, help: &HelpSystem, state: &GameState) {
+    let area = f.area();
+    
+    // Center popup (80% width, 70% height)
+    let popup_width = (area.width as f32 * 0.8) as u16;
+    let popup_height = (area.height as f32 * 0.7) as u16;
+    let popup_x = (area.width - popup_width) / 2;
+    let popup_y = (area.height - popup_height) / 2;
+    
+    let popup_area = Rect::new(popup_x, popup_y, popup_width, popup_height);
+    
+    // Clear the area behind the popup
+    f.render_widget(Clear, popup_area);
+    
+    // Main help block
+    let help_block = Block::default()
+        .title(" 󰋗 HELP ")
+        .title_alignment(Alignment::Center)
+        .borders(Borders::ALL)
+        .border_style(Style::default().fg(Color::Cyan))
+        .style(Style::default().bg(Color::Black));
+    
+    f.render_widget(help_block.clone(), popup_area);
+    
+    // Inner area for content
+    let inner = help_block.inner(popup_area);
+    
+    // Split into tabs + content
+    let chunks = Layout::default()
+        .direction(Direction::Vertical)
+        .constraints([
+            Constraint::Length(3),  // Tabs
+            Constraint::Min(1),     // Content
+            Constraint::Length(2),  // Footer
+        ])
+        .split(inner);
+    
+    // Render tabs
+    let tab_titles: Vec<Line> = HelpTab::all()
+        .iter()
+        .map(|t| Line::from(format!(" {} ", t.label())))
+        .collect();
+    
+    let tabs = Tabs::new(tab_titles)
+        .select(help.active_tab.index())
+        .style(Style::default().fg(Color::White))
+        .highlight_style(Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD))
+        .divider("│");
+    
+    f.render_widget(tabs, chunks[0]);
+    
+    // Render content based on active tab
+    match help.active_tab {
+        HelpTab::Contextual => render_help_contextual(f, help, chunks[1]),
+        HelpTab::Keybindings => render_help_keybindings(f, help, chunks[1]),
+        HelpTab::Objectives => render_help_objectives(f, help, state, chunks[1]),
+        HelpTab::Mechanics => render_help_mechanics(f, help, chunks[1]),
+    }
+    
+    // Footer with navigation hints
+    let footer = Paragraph::new(Line::from(vec![
+        Span::styled(" [1-4] ", Style::default().fg(Color::Yellow)),
+        Span::raw("Switch tabs  "),
+        Span::styled("[Tab] ", Style::default().fg(Color::Yellow)),
+        Span::raw("Next tab  "),
+        Span::styled("[j/k] ", Style::default().fg(Color::Yellow)),
+        Span::raw("Scroll  "),
+        Span::styled("[Esc/?] ", Style::default().fg(Color::Yellow)),
+        Span::raw("Close"),
+    ]))
+    .alignment(Alignment::Center)
+    .style(Style::default().fg(Color::DarkGray));
+    
+    f.render_widget(footer, chunks[2]);
+}
+
+/// Render contextual tips tab
+fn render_help_contextual(f: &mut Frame, help: &HelpSystem, area: Rect) {
+    let tips = help.get_contextual_tips();
+    
+    let context_name = match help.context {
+        crate::game::help_system::HelpContext::Combat => "Combat",
+        crate::game::help_system::HelpContext::Exploration => "Exploration",
+        crate::game::help_system::HelpContext::Shop => "Shop",
+        crate::game::help_system::HelpContext::Rest => "Rest Site",
+        crate::game::help_system::HelpContext::Event => "Event",
+        crate::game::help_system::HelpContext::Inventory => "Inventory",
+        crate::game::help_system::HelpContext::ClassSelect => "Class Selection",
+        crate::game::help_system::HelpContext::Title => "Main Menu",
+        _ => "Game",
+    };
+    
+    let mut lines: Vec<Line> = vec![
+        Line::from(vec![
+            Span::styled(
+                format!("─── Current Context: {} ───", context_name),
+                Style::default().fg(Color::Cyan).add_modifier(Modifier::BOLD),
+            ),
+        ]),
+        Line::from(""),
+    ];
+    
+    for tip in tips.iter().skip(help.scroll_offset) {
+        let priority_color = match tip.priority {
+            TipPriority::Essential => Color::Green,
+            TipPriority::Important => Color::Yellow,
+            TipPriority::Advanced => Color::Magenta,
+            TipPriority::Secret => Color::Red,
+        };
+        
+        lines.push(Line::from(vec![
+            Span::styled(format!("  {} ", tip.icon), Style::default().fg(priority_color)),
+            Span::styled(tip.title, Style::default().fg(Color::White).add_modifier(Modifier::BOLD)),
+        ]));
+        lines.push(Line::from(vec![
+            Span::raw("     "),
+            Span::styled(tip.description, Style::default().fg(Color::Gray)),
+        ]));
+        lines.push(Line::from(""));
+    }
+    
+    let content = Paragraph::new(lines)
+        .block(Block::default())
+        .wrap(Wrap { trim: true });
+    
+    f.render_widget(content, area);
+}
+
+/// Render keybindings tab
+fn render_help_keybindings(f: &mut Frame, help: &HelpSystem, area: Rect) {
+    let bindings = help.get_keybindings(false);
+    
+    let mut lines: Vec<Line> = vec![
+        Line::from(vec![
+            Span::styled("─── Keybindings ───", Style::default().fg(Color::Cyan).add_modifier(Modifier::BOLD)),
+        ]),
+        Line::from(""),
+    ];
+    
+    // Group by global vs context-specific
+    lines.push(Line::from(Span::styled("  Global:", Style::default().fg(Color::Yellow))));
+    for binding in bindings.iter().filter(|b| b.context.is_none()).skip(help.scroll_offset) {
+        lines.push(Line::from(vec![
+            Span::styled(format!("    {:12}", binding.key), Style::default().fg(Color::Green)),
+            Span::styled(binding.action, Style::default().fg(Color::White)),
+        ]));
+    }
+    
+    lines.push(Line::from(""));
+    lines.push(Line::from(Span::styled("  Context-Specific:", Style::default().fg(Color::Yellow))));
+    for binding in bindings.iter().filter(|b| b.context.is_some()) {
+        lines.push(Line::from(vec![
+            Span::styled(format!("    {:12}", binding.key), Style::default().fg(Color::Magenta)),
+            Span::styled(binding.action, Style::default().fg(Color::White)),
+        ]));
+    }
+    
+    let content = Paragraph::new(lines)
+        .block(Block::default())
+        .wrap(Wrap { trim: true });
+    
+    f.render_widget(content, area);
+}
+
+/// Render objectives tab
+fn render_help_objectives(f: &mut Frame, help: &HelpSystem, state: &GameState, area: Rect) {
+    let floor = state.dungeon.as_ref().map(|d| d.current_floor).unwrap_or(1);
+    let enemies = state.total_enemies_defeated;
+    let has_boss = false; // Could track this in dungeon state
+    
+    let objectives = help.get_objectives(floor, enemies, has_boss);
+    
+    let mut lines: Vec<Line> = vec![
+        Line::from(vec![
+            Span::styled("─── Current Objectives ───", Style::default().fg(Color::Cyan).add_modifier(Modifier::BOLD)),
+        ]),
+        Line::from(""),
+    ];
+    
+    for objective in objectives {
+        lines.push(Line::from(vec![
+            Span::styled(objective.clone(), Style::default().fg(Color::White)),
+        ]));
+        lines.push(Line::from(""));
+    }
+    
+    // Add mystery progress hint
+    lines.push(Line::from(""));
+    lines.push(Line::from(vec![
+        Span::styled("─── Mystery ───", Style::default().fg(Color::Magenta).add_modifier(Modifier::BOLD)),
+    ]));
+    lines.push(Line::from(""));
+    lines.push(Line::from(vec![
+        Span::styled("  󰛓 ", Style::default().fg(Color::Magenta)),
+        Span::styled("\"The Threshold holds secrets yet unrevealed...\"", Style::default().fg(Color::DarkGray).add_modifier(Modifier::ITALIC)),
+    ]));
+    
+    let content = Paragraph::new(lines)
+        .block(Block::default())
+        .wrap(Wrap { trim: true });
+    
+    f.render_widget(content, area);
+}
+
+/// Render mechanics tab
+fn render_help_mechanics(f: &mut Frame, help: &HelpSystem, area: Rect) {
+    let mechanics = help.get_mechanics();
+    
+    let mut lines: Vec<Line> = vec![
+        Line::from(vec![
+            Span::styled("─── Game Mechanics ───", Style::default().fg(Color::Cyan).add_modifier(Modifier::BOLD)),
+        ]),
+        Line::from(""),
+    ];
+    
+    for (i, (title, subtitle, details)) in mechanics.iter().enumerate().skip(help.scroll_offset) {
+        if i > 0 {
+            lines.push(Line::from(""));
+        }
+        
+        lines.push(Line::from(vec![
+            Span::styled(*title, Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD)),
+        ]));
+        lines.push(Line::from(vec![
+            Span::styled(format!("  {}", subtitle), Style::default().fg(Color::Gray).add_modifier(Modifier::ITALIC)),
+        ]));
+        
+        for detail in details {
+            lines.push(Line::from(vec![
+                Span::styled(format!("    {}", detail), Style::default().fg(Color::White)),
+            ]));
+        }
+    }
+    
+    let content = Paragraph::new(lines)
+        .block(Block::default())
+        .wrap(Wrap { trim: true });
+    
+    f.render_widget(content, area);
+}
+
+/// Render bottom bar with hints and help reminder
+fn render_bottom_bar(f: &mut Frame, state: &GameState) {
+    let area = f.area();
+    
+    // Bottom bar (1 line at the very bottom)
+    let bar_area = Rect::new(0, area.height.saturating_sub(1), area.width, 1);
+    
+    // Check for active hint first
+    let content = if let Some((icon, message)) = state.hint_manager.current_message() {
+        Line::from(vec![
+            Span::styled(format!(" {} ", icon), Style::default().fg(Color::Yellow)),
+            Span::styled(message, Style::default().fg(Color::White)),
+        ])
+    } else {
+        // Default help reminder
+        Line::from(vec![
+            Span::styled(
+                format!(" {} ", state.help_system.get_persistent_hint()),
+                Style::default().fg(Color::DarkGray),
+            ),
+        ])
+    };
+    
+    let bar = Paragraph::new(content)
+        .style(Style::default().bg(Color::Rgb(30, 30, 30)));
+    
+    f.render_widget(bar, bar_area);
 }
 
 fn render_title(f: &mut Frame, state: &GameState) {

@@ -9,6 +9,7 @@ use crate::game::{
     dungeon::Dungeon,
     items::Item,
     events::GameEvent,
+    help_system::{HelpSystem, HintManager},
 };
 use crate::data::GameData;
 
@@ -53,6 +54,8 @@ pub struct GameState {
     pub best_wpm: f64,
     pub input_buffer: String,
     pub game_data: Arc<GameData>,
+    pub help_system: HelpSystem,
+    pub hint_manager: HintManager,
 }
 
 impl Default for GameState {
@@ -79,6 +82,8 @@ impl GameState {
             best_wpm: 0.0,
             input_buffer: String::new(),
             game_data: Arc::new(GameData::load_or_default()),
+            help_system: HelpSystem::new(),
+            hint_manager: HintManager::new(),
         }
     }
 

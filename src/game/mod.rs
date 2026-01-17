@@ -50,3 +50,4 @@ pub mod writing_guidelines;
 pub mod narrative_integration;
 pub mod typing_feel;
 pub mod meta_progression;
+pub mod help_system;

@@ -110,6 +110,23 @@ enum InputResult {
 }
 
 fn handle_input(game: &mut GameState, key: KeyCode) -> InputResult {
+    // Update help system context
+    game.help_system.update_context(game.scene);
+    
+    // Help overlay intercepts input when visible
+    if game.help_system.visible {
+        return handle_help_input(game, key);
+    }
+    
+    // Global help toggle (? or H)
+    match key {
+        KeyCode::Char('?') | KeyCode::Char('H') => {
+            game.help_system.toggle();
+            return InputResult::Continue;
+        }
+        _ => {}
+    }
+    
     match game.scene {
         Scene::Title => handle_title_input(game, key),
         Scene::ClassSelect => handle_class_select_input(game, key),
@@ -123,6 +140,39 @@ fn handle_input(game: &mut GameState, key: KeyCode) -> InputResult {
         Scene::GameOver => handle_game_over_input(game, key),
         Scene::Victory => handle_victory_input(game, key),
     }
+}
+
+/// Handle input when help overlay is open
+fn handle_help_input(game: &mut GameState, key: KeyCode) -> InputResult {
+    match key {
+        // Close help
+        KeyCode::Esc | KeyCode::Char('?') | KeyCode::Char('H') => {
+            game.help_system.hide();
+        }
+        // Tab navigation
+        KeyCode::Tab => {
+            game.help_system.next_tab();
+        }
+        KeyCode::BackTab => {
+            game.help_system.prev_tab();
+        }
+        // Number keys for tabs
+        KeyCode::Char('1') => game.help_system.select_tab(1),
+        KeyCode::Char('2') => game.help_system.select_tab(2),
+        KeyCode::Char('3') => game.help_system.select_tab(3),
+        KeyCode::Char('4') => game.help_system.select_tab(4),
+        // Scrolling
+        KeyCode::Down | KeyCode::Char('j') => {
+            game.help_system.scroll_down();
+        }
+        KeyCode::Up | KeyCode::Char('k') => {
+            game.help_system.scroll_up();
+        }
+        // Quit still works
+        KeyCode::Char('q') => return InputResult::Quit,
+        _ => {}
+    }
+    InputResult::Continue
 }
 
 fn handle_title_input(game: &mut GameState, key: KeyCode) -> InputResult {
