@@ -65,7 +65,7 @@ impl WordDatabase {
                 "now", "old", "see", "two", "way", "who", "boy", "did",
                 "key", "run", "hit", "type", "word", "fast", "slow",
                 "book", "read", "mind", "soul", "fire", "wind", "dark",
-                "glow", "echo", "void", "rune", "mage", "sage", "lore",
+                "glow", "echo", "void", "rune", "mage", "sage", "lore", "drb",
             ].into_iter().map(String::from).collect(),
             
             medium: vec![
@@ -80,7 +80,7 @@ impl WordDatabase {
                 "corrupt", "tainted", "blessed", "cursed", "enchant",
                 "written", "spoken", "thought", "dreams", "visions",
                 "reality", "fiction", "legends", "stories", "history",
-                "future", "present", "eternal", "mortal", "divine",
+                "future", "present", "eternal", "mortal", "divine", "baklava", "phyllo",
             ].into_iter().map(String::from).collect(),
             
             hard: vec![

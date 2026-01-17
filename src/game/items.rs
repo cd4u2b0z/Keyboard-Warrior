@@ -398,3 +398,58 @@ impl Item {
         filtered.choose(&mut rng).cloned()
     }
 }
+
+// === Dr. Baklava Easter Egg Items ===
+
+impl Item {
+    /// Special Dr. Baklava legendary items (rare drops)
+    pub fn baklava_specials() -> Vec<Self> {
+        vec![
+            Item {
+                name: "Dr. Baklava's Golden Phyllo".to_string(),
+                description: "Layered like code, sweet like victory. +25% all damage.".to_string(),
+                flavor_text: "\"Trust the layers.\" - Dr. Baklava".to_string(),
+                item_type: ItemType::Relic,
+                rarity: ItemRarity::Legendary,
+                effect: ItemEffect::StatBonus { hp: 25, mp: 25, str_: 5, dex: 5, int: 5 },
+                price: 777,
+            },
+            Item {
+                name: "Honeyed Keyswitch".to_string(),
+                description: "A mechanical key dipped in sacred honey. +2 seconds typing time.".to_string(),
+                flavor_text: "Smooth keystrokes, courtesy of Dr. B.".to_string(),
+                item_type: ItemType::Joker,
+                rarity: ItemRarity::Epic,
+                effect: ItemEffect::TimeExtend(2.0),
+                price: 250,
+            },
+            Item {
+                name: "Pistachio of Power".to_string(),
+                description: "The sacred nut. Forgives 2 typos per word.".to_string(),
+                flavor_text: "Blessed by the Baklava itself.".to_string(),
+                item_type: ItemType::Joker,
+                rarity: ItemRarity::Rare,
+                effect: ItemEffect::ErrorForgive(2),
+                price: 175,
+            },
+            Item {
+                name: "Sugar Rush Espresso".to_string(),
+                description: "Dr. Baklava's secret recipe. Full heal + temp speed boost.".to_string(),
+                flavor_text: "WARNING: May cause enlightenment.".to_string(),
+                item_type: ItemType::Consumable,
+                rarity: ItemRarity::Legendary,
+                effect: ItemEffect::HealBoth { hp: 999, mp: 999 },
+                price: 500,
+            },
+        ]
+    }
+
+    /// 3% chance to get a Dr. Baklava special when calling random functions
+    pub fn random_with_baklava_chance() -> Option<Self> {
+        if rand::random::<f32>() < 0.03 {
+            let mut rng = rand::thread_rng();
+            return Self::baklava_specials().choose(&mut rng).cloned();
+        }
+        None
+    }
+}

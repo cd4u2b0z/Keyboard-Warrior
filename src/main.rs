@@ -1,6 +1,8 @@
 //! TypingQuest - A Roguelike Typing Adventure
 //! 
 //! Inspired by ttyper, Undertale, Earthbound, and Balatro
+//!
+//! 󰩛 Original work by Dr. Baklava 󰩛
 
 mod game;
 mod data;

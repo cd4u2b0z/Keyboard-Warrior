@@ -194,3 +194,109 @@ impl GameEvent {
         ]
     }
 }
+
+// === Dr. Baklava Easter Eggs ===
+
+impl GameEvent {
+    /// Rare Dr. Baklava encounters - 5% chance to replace normal events
+    pub fn random_with_easter_eggs() -> Self {
+        let mut rng = rand::thread_rng();
+        
+        // 5% chance for a Dr. Baklava event
+        if rand::random::<f32>() < 0.05 {
+            let easter_eggs = Self::get_baklava_events();
+            return easter_eggs.choose(&mut rng).unwrap().clone();
+        }
+        
+        Self::random()
+    }
+    
+    fn get_baklava_events() -> Vec<Self> {
+        vec![
+            GameEvent {
+                name: "The Mysterious Baker".to_string(),
+                description: "A figure in a dark cloak stands before an ornate oven. \
+                    The smell of honey and phyllo dough fills the air. \
+                    'I am Dr. Baklava,' they whisper. 'I deal in sweets... and secrets.'".to_string(),
+                choices: vec![
+                    EventChoice {
+                        text: "Accept the golden pastry".to_string(),
+                        outcome: EventOutcome::GainMaxHP(10),
+                    },
+                    EventChoice {
+                        text: "Ask about the secrets".to_string(),
+                        outcome: EventOutcome::GainXP(50),
+                    },
+                    EventChoice {
+                        text: "Bow respectfully and leave".to_string(),
+                        outcome: EventOutcome::GainGold(77),
+                    },
+                ],
+                ascii_art: concat!(
+                    "      ╭─────╮\n",
+                    "     ╱ DR.B  ╲\n",
+                    "    │ ◉   ◉ │\n",
+                    "    │   ▽   │\n",
+                    "    ╰───────╯\n",
+                    "    ╱╲ 󰩛 ╱╲"
+                ).to_string(),
+            },
+            GameEvent {
+                name: "The Baklava Prophecy".to_string(),
+                description: "Ancient runes glow on the wall. As you approach, \
+                    they rearrange themselves into words: \
+                    'DR. BAKLAVA WAS HERE - The layers of code run deep, \
+                    like phyllo dough in a perfect pastry. Type with purpose.'".to_string(),
+                choices: vec![
+                    EventChoice {
+                        text: "Touch the glowing runes".to_string(),
+                        outcome: EventOutcome::GainXP(100),
+                    },
+                    EventChoice {
+                        text: "Copy the inscription".to_string(),
+                        outcome: EventOutcome::GainItem,
+                    },
+                    EventChoice {
+                        text: "Leave an offering".to_string(),
+                        outcome: EventOutcome::LoseGold(10),
+                    },
+                ],
+                ascii_art: concat!(
+                    "  ╔═══════════════╗\n",
+                    "  ║ 󰬛 DR.BAKLAVA ║\n",
+                    "  ║   WAS HERE    ║\n",
+                    "  ║  ≋≋≋≋≋≋≋≋≋≋   ║\n",
+                    "  ╚═══════════════╝"
+                ).to_string(),
+            },
+            GameEvent {
+                name: "The Pastry Dimension".to_string(),
+                description: "A rift opens in reality. Through it, you glimpse \
+                    an infinite bakery where keyboards grow from flour sacks \
+                    and monitors display only dessert recipes. \
+                    A voice echoes: 'Greetings from the Baklava Realm!'".to_string(),
+                choices: vec![
+                    EventChoice {
+                        text: "Step through the portal".to_string(),
+                        outcome: EventOutcome::GainMaxHP(15),
+                    },
+                    EventChoice {
+                        text: "Reach in for a treat".to_string(),
+                        outcome: EventOutcome::GainHP(50),
+                    },
+                    EventChoice {
+                        text: "Close the rift (it's too sweet)".to_string(),
+                        outcome: EventOutcome::GainGold(42),
+                    },
+                ],
+                ascii_art: concat!(
+                    "    ╭──◯──╮\n",
+                    "   ╱ ~~~~~ ╲\n",
+                    "  │ 󰩛󰩛󰩛󰩛󰩛 │\n",
+                    "   ╲ ~~~~~ ╱\n",
+                    "    ╰──◯──╯"
+                ).to_string(),
+            },
+        ]
+    }
+}

@@ -54,7 +54,7 @@ fn render_title(f: &mut Frame, state: &GameState) {
     f.render_widget(title, chunks[0]);
 
     // Subtitle
-    let subtitle = Paragraph::new("A Roguelike Typing Adventure")
+    let subtitle = Paragraph::new("A Roguelike Typing Adventure by Dr. Baklava")
         .style(Style::default().fg(Color::Yellow).add_modifier(Modifier::ITALIC))
         .alignment(Alignment::Center);
     f.render_widget(subtitle, chunks[1]);
@@ -665,7 +665,7 @@ fn render_victory(f: &mut Frame, state: &GameState) {
 
     let stats = if let Some(player) = &state.player {
         format!(
-            "Congratulations, {}!\n\nYou conquered all 10 floors as a Level {} {}!\n\nEnemies defeated: {}\nWords typed: {}\nBest WPM: {:.1}\n\nYou are a true Typing Champion!",
+            "Congratulations, {}!\n\nYou conquered all 10 floors as a Level {} {}!\n\nEnemies defeated: {}\nWords typed: {}\nBest WPM: {:.1}\n\nYou are a true Typing Champion!\n\n󰩛 Dr. Baklava salutes you 󰩛",
             player.name,
             player.level,
             player.class.name(),
