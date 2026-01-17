@@ -2,3 +2,4 @@
 //! UI module - ratatui rendering
 
 pub mod render;
+pub mod theme;
