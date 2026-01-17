@@ -1,4 +1,4 @@
-zr# Changelog
+## Changelog
 
 All notable changes to TypingQuest will be documented in this file.
 
