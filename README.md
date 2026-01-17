@@ -1,10 +1,11 @@
 # 󰓥 TypingQuest
 
-**A roguelike RPG typing adventure — type to cast spells, defeat enemies, and save the realm.**
+**A narrative roguelike typing RPG — discover ancient mysteries through the rhythm of your keystrokes.**
 
 [![Rust](https://img.shields.io/badge/Rust-1.70+-DEA584?style=flat&logo=rust&logoColor=white)](https://www.rust-lang.org/)
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat)](LICENSE)
-[![Version](https://img.shields.io/badge/Version-0.1.0-blue?style=flat)]()
+[![Version](https://img.shields.io/badge/Version-0.2.0-blue?style=flat)]()
+[![Lines of Code](https://img.shields.io/badge/Lines-20k+-yellow?style=flat)]()
 [![TUI](https://img.shields.io/badge/TUI-ratatui-purple?style=flat)](https://github.com/ratatui-org/ratatui)
 
 TypingQuest combines the satisfying mechanics of typing trainers like [ttyper](https://github.com/max-niederman/ttyper) with deep RPG progression inspired by *Undertale*, *Earthbound*, *Balatro*, and classic roguelikes.
@@ -48,6 +49,38 @@ TypingQuest combines the satisfying mechanics of typing trainers like [ttyper](h
 ---
 
 ## 󰓎 Features
+
+### 󰴓 Deep Narrative Systems *(NEW in 0.2.0)*
+
+| Feature | Description |
+|---------|-------------|
+| 󰂺 Lore Discovery | Uncover fragments of ancient history as you type |
+| 󰒖 Five Factions | Silent Order, Echoing Choir, Merchants, Wardens, Void Touched |
+| 󰛓 Mystery Progression | Five-tier revelation system with multiple endings |
+| 󰘬 Character Bonds | Build relationships through repeated encounters |
+| 󰖟 World State | Your choices reshape faction territories and alliances |
+| 󰝚 Voiced Dialogue | 15+ authored NPC encounters with distinct personalities |
+
+### 󰌌 Typing Feel Engine *(NEW in 0.2.0)*
+
+| Feature | Description |
+|---------|-------------|
+| 󰒔 Flow States | Building → Flowing → Transcendent |
+| 󰈸 Combo System | Chain words for up to 3x damage multiplier |
+| 󰔊 Rhythm Detection | Cadence analysis affects critical hit chance |
+| 󰋖 Visual Feedback | Screen shake, color flash, text ripple effects |
+| 󰌓 Keystroke Feel | Every key press feels impactful and satisfying |
+
+### 󰆼 Meta-Progression *(NEW in 0.2.0)*
+
+| Feature | Description |
+|---------|-------------|
+| 󰐀 Ink Currency | Earn persistent currency from every run |
+| 󰓦 Unlock Tree | HP bonus, damage bonus, word preview, map reveal |
+| 󰄀 Lore Codex | Collected lore persists across deaths |
+| 󰘆 Achievements | Speed Demon, Perfectionist, True Ending, 10+ more |
+| 󰈅 Heat System | Hades-style difficulty modifiers for extra rewards |
+| 󰖟 NPC Bonds | Relationships deepen across multiple runs |
 
 ### Core Features
 
@@ -210,13 +243,40 @@ src/
 
 ### Key Systems
 
-| System | File | Description |
-|--------|------|-------------|
-| `GameState` | `state.rs` | Central state machine with scenes |
-| `CombatEngine` | `combat_engine.rs` | Event-driven combat with subscribers |
-| `GameData` | `data/mod.rs` | Data-driven content system |
-| `stats.rs` | Achievement tracking, performance metrics |
-| `save.rs` | RON-based save/load system |
+| System | File | LOC | Description |
+|--------|------|-----|-------------|
+| Narrative Engine | `narrative_integration.rs` | ~550 | Coordinates all story systems |
+| Deep Lore | `deep_lore.rs` | ~700 | Cosmology, faction histories, endings |
+| Typing Feel | `typing_feel.rs` | ~450 | Flow states, combos, visual effects |
+| Meta Progression | `meta_progression.rs` | ~650 | Persistent unlocks, achievements |
+| Faction System | `faction_system.rs` | ~815 | Five factions with relationships |
+| Voice System | `voice_system.rs` | ~800 | NPC dialogue with personalities |
+| Narrative Seed | `narrative_seed.rs` | ~900 | Procedural narrative generation |
+| Event Bus | `event_bus.rs` | ~600 | Game-wide event system |
+| Combat Engine | `combat_engine.rs` | ~350 | Event-driven typing combat |
+
+### System Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                     NarrativeEngine                             │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐       │
+│  │ DeepLore │  │ Factions │  │  Voice   │  │  Lore    │       │
+│  │ System   │  │ System   │  │  System  │  │ Fragments│       │
+│  └────┬─────┘  └────┬─────┘  └────┬─────┘  └────┬─────┘       │
+│       └─────────────┴─────────────┴─────────────┘              │
+│                         │                                       │
+│  ┌──────────────────────┴──────────────────────┐               │
+│  │              TypingFeel Engine               │               │
+│  │   FlowState → Combo → Rhythm → Visual FX    │               │
+│  └──────────────────────┬──────────────────────┘               │
+│                         │                                       │
+│  ┌──────────────────────┴──────────────────────┐               │
+│  │             MetaProgression                  │               │
+│  │   Ink → Unlocks → Codex → Bonds → Heat     │               │
+│  └─────────────────────────────────────────────┘               │
+└─────────────────────────────────────────────────────────────────┘
+```
 
 ---
 
@@ -251,6 +311,12 @@ src/
 - [x] Save/load system
 - [x] Configuration system
 - [x] Statistics & achievements
+- [x] **Deep narrative systems** *(0.2.0)*
+- [x] **Faction reputation & relationships** *(0.2.0)*
+- [x] **Typing feel engine** *(0.2.0)*
+- [x] **Meta-progression (Hades-style)** *(0.2.0)*
+- [x] **Lore codex & mystery system** *(0.2.0)*
+- [x] **NPC bonds across runs** *(0.2.0)*
 - [ ] Sound effects (rodio integration)
 - [ ] External content files (JSON/RON)
 - [ ] Multiplayer typing races
@@ -272,6 +338,22 @@ MIT License - See [LICENSE](LICENSE) for details.
 
 ---
 
-**Type fast. Fight hard. Save the realm.** 󰓥
+**Type fast. Fight hard. Discover the truth.** 󰓥
 
-Original work by **Dr. Baklava** • [github.com/cd4u2b0z](https://github.com/cd4u2b0z) • 2026
+Original work by **Dr. Baklava** • [github.com/cd4u2b0z](https://github.com/cd4u2b0z) • 2025
+
+---
+
+<details>
+<summary><strong>📊 Project Stats</strong></summary>
+
+- **Total Lines of Code:** ~20,000
+- **Rust Source Files:** 35+
+- **Major Systems:** 9
+- **Authored NPC Encounters:** 15+
+- **Lore Fragments:** 13+
+- **Playable Classes:** 5
+- **Factions:** 5
+- **Endings:** 12
+
+</details>
