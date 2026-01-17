@@ -232,7 +232,7 @@ MIT License. See [LICENSE](LICENSE) for details.
 
 ## Credits
 
-**TypingQuest** — Original work by Craig
+**TypingQuest** — Original work by Dr. Baklava
 
 Built with:
 - [ratatui](https://github.com/ratatui-org/ratatui) — Terminal UI framework
