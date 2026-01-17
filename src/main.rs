@@ -279,6 +279,7 @@ fn handle_dungeon_input(game: &mut GameState, key: KeyCode) -> InputResult {
                             player.inventory.push(item.clone());
                             game.add_message(&format!("Found {}!", item.name));
                         }
+                        game.end_treasure();
                     }
                     RoomType::Shop => {
                         game.enter_shop();
@@ -384,7 +385,7 @@ fn handle_shop_input(game: &mut GameState, key: KeyCode) -> InputResult {
             }
         }
         KeyCode::Esc => {
-            game.scene = Scene::Dungeon;
+            game.end_shop();
             game.menu_index = 0;
         }
         _ => {}
@@ -427,11 +428,11 @@ fn handle_rest_input(game: &mut GameState, key: KeyCode) -> InputResult {
                     _ => {}
                 }
             }
-            game.scene = Scene::Dungeon;
+            game.end_rest();
             game.menu_index = 0;
         }
         KeyCode::Esc => {
-            game.scene = Scene::Dungeon;
+            game.end_rest();
             game.menu_index = 0;
         }
         _ => {}

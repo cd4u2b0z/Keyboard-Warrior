@@ -164,6 +164,35 @@ impl GameState {
             dungeon.rooms_cleared += 1;
         }
     }
+    pub fn end_rest(&mut self) {
+        self.scene = Scene::Dungeon;
+        
+        // Mark rest room as cleared and increment counter
+        if let Some(dungeon) = &mut self.dungeon {
+            dungeon.current_room.cleared = true;
+            dungeon.rooms_cleared += 1;
+        }
+    }
+
+    pub fn end_treasure(&mut self) {
+        // Mark treasure room as cleared and increment counter
+        if let Some(dungeon) = &mut self.dungeon {
+            dungeon.current_room.cleared = true;
+            dungeon.rooms_cleared += 1;
+        }
+    }
+
+    pub fn end_shop(&mut self) {
+        self.scene = Scene::Dungeon;
+        self.shop_items.clear();
+        
+        // Mark shop room as cleared and increment counter
+        if let Some(dungeon) = &mut self.dungeon {
+            dungeon.current_room.cleared = true;
+            dungeon.rooms_cleared += 1;
+        }
+    }
+
 
     pub fn enter_shop(&mut self) {
         use rand::seq::SliceRandom;
