@@ -35,6 +35,8 @@ pub enum Scene {
     Lore,
     /// Milestone/story event
     Milestone,
+    /// Meta-progression upgrade shop
+    Upgrades,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -78,6 +80,10 @@ pub struct GameState {
     pub faction_relations: FactionRelations,
     /// Persistent meta-progression (survives death)
     pub meta_progress: MetaProgress,
+    /// Meta-progression damage bonus (from unlocks)
+    pub damage_bonus_percent: f32,
+    /// Meta-progression time bonus (from unlocks)
+    pub time_bonus_percent: f32,
 }
 
 impl Default for GameState {
@@ -114,14 +120,31 @@ impl GameState {
             discovered_lore: Vec::new(),
             faction_relations: FactionRelations::new(),
             meta_progress: MetaProgress::default(),
+            damage_bonus_percent: 0.0,
+            time_bonus_percent: 0.0,
         }
     }
 
-    pub fn start_new_game(&mut self, player: Player) {
+    pub fn start_new_game(&mut self, mut player: Player) {
+        // Apply meta-progression bonuses
+        let bonus = self.meta_progress.start_run();
+        player.max_hp += bonus.hp_bonus;
+        player.hp += bonus.hp_bonus;
+        player.gold += bonus.gold_bonus as u64;
+        
+        // Store bonuses for combat calculations
+        self.damage_bonus_percent = bonus.damage_bonus_percent;
+        self.time_bonus_percent = bonus.time_bonus_percent;
+        
         self.player = Some(player);
         self.dungeon = Some(Dungeon::new());
         self.scene = Scene::Dungeon;
         self.message_log.clear();
+        
+        // Show bonus message if any
+        if bonus.hp_bonus > 0 || bonus.gold_bonus > 0 {
+            self.add_message(&format!("Meta-bonuses: +{} HP, +{} Gold", bonus.hp_bonus, bonus.gold_bonus));
+        }
         self.add_message("Your typing quest begins!");
     }
 

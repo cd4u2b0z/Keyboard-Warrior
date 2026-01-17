@@ -150,6 +150,7 @@ fn handle_input(game: &mut GameState, key: KeyCode) -> InputResult {
         Scene::Tutorial => handle_tutorial_input(game, key),
         Scene::Lore => handle_lore_input(game, key),
         Scene::Milestone => handle_milestone_input(game, key),
+        Scene::Upgrades => handle_upgrades_input(game, key),
     }
 }
 
@@ -189,7 +190,7 @@ fn handle_help_input(game: &mut GameState, key: KeyCode) -> InputResult {
 fn handle_title_input(game: &mut GameState, key: KeyCode) -> InputResult {
     match key {
         KeyCode::Up | KeyCode::Char('k') => game.move_menu_up(),
-        KeyCode::Down | KeyCode::Char('j') => game.move_menu_down(4),
+        KeyCode::Down | KeyCode::Char('j') => game.move_menu_down(5), // Now 5 items
         KeyCode::Enter => {
             match game.menu_index {
                 0 => {
@@ -203,10 +204,15 @@ fn handle_title_input(game: &mut GameState, key: KeyCode) -> InputResult {
                     game.scene = Scene::Tutorial;
                 }
                 2 => {
+                    // Upgrades (meta-progression shop)
+                    game.scene = Scene::Upgrades;
+                    game.menu_index = 0;
+                }
+                3 => {
                     // Continue (placeholder - would load save)
                     game.add_message("No save file found...");
                 }
-                3 => {
+                4 => {
                     // Quit
                     return InputResult::Quit;
                 }
@@ -215,6 +221,10 @@ fn handle_title_input(game: &mut GameState, key: KeyCode) -> InputResult {
         }
         KeyCode::Char('n') => {
             game.scene = Scene::ClassSelect;
+            game.menu_index = 0;
+        }
+        KeyCode::Char('u') => {
+            game.scene = Scene::Upgrades;
             game.menu_index = 0;
         }
         KeyCode::Char('q') => return InputResult::Quit,
@@ -723,6 +733,44 @@ fn handle_milestone_input(game: &mut GameState, key: KeyCode) -> InputResult {
         KeyCode::Enter => {
             game.current_milestone = None;
             game.scene = Scene::Dungeon;
+        }
+        _ => {}
+    }
+    InputResult::Continue
+}
+
+/// Handle input in the upgrades/meta-progression shop
+fn handle_upgrades_input(game: &mut GameState, key: KeyCode) -> InputResult {
+    let upgrades = game.meta_progress.get_available_upgrades();
+    let max_index = upgrades.len().saturating_sub(1);
+    
+    match key {
+        KeyCode::Up | KeyCode::Char('k') => {
+            if game.menu_index > 0 {
+                game.menu_index -= 1;
+            }
+        }
+        KeyCode::Down | KeyCode::Char('j') => {
+            if game.menu_index < max_index {
+                game.menu_index += 1;
+            }
+        }
+        KeyCode::Enter => {
+            // Try to purchase selected upgrade
+            if let Some(upgrade) = upgrades.get(game.menu_index) {
+                match game.meta_progress.purchase_upgrade(&upgrade.id) {
+                    Ok(()) => {
+                        game.add_message(&format!("Purchased {}!", upgrade.name));
+                    }
+                    Err(e) => {
+                        game.add_message(&format!("Cannot purchase: {}", e));
+                    }
+                }
+            }
+        }
+        KeyCode::Esc => {
+            game.scene = Scene::Title;
+            game.menu_index = 0;
         }
         _ => {}
     }

@@ -52,6 +52,7 @@ impl From<Scene> for HelpContext {
             Scene::Tutorial => HelpContext::Tutorial,
             Scene::Lore => HelpContext::Event, // Lore is similar to events
             Scene::Milestone => HelpContext::Event, // Milestones are similar to events
+            Scene::Upgrades => HelpContext::Shop, // Upgrades is like a shop
         }
     }
 }

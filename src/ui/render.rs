@@ -30,6 +30,7 @@ pub fn render(f: &mut Frame, state: &GameState) {
         Scene::Tutorial => render_tutorial(f, state),
         Scene::Lore => render_lore_discovery(f, state),
         Scene::Milestone => render_milestone(f, state),
+        Scene::Upgrades => render_upgrades(f, state),
     }
     
     // Render help overlay on top if visible
@@ -361,9 +362,18 @@ fn render_title(f: &mut Frame, state: &GameState) {
     let menu_items = vec![
         ("󰓥", "New Game", "[N]"),
         ("󰂽", "Tutorial", "[T]"),
+        ("󰙤", "Upgrades", "[U]"),
         ("󱪙", "Continue", "[C]"),
         ("󰅖", "Quit", "[Q]"),
     ];
+    
+    // Show ink if any earned
+    let ink_display = if state.meta_progress.current_ink > 0 {
+        format!("  󰙤 {} Ink", state.meta_progress.current_ink)
+    } else {
+        String::new()
+    };
+    
     let menu: Vec<ListItem> = menu_items
         .iter()
         .enumerate()
@@ -382,8 +392,9 @@ fn render_title(f: &mut Frame, state: &GameState) {
         })
         .collect();
 
+    let menu_title = format!(" 󰍜 Menu{} ", ink_display);
     let menu_widget = List::new(menu)
-        .block(Block::default().borders(Borders::ALL).border_style(Style::default().fg(Palette::BORDER)).title(Span::styled(" 󰍜 Menu ", Style::default().fg(Palette::PRIMARY))));
+        .block(Block::default().borders(Borders::ALL).border_style(Style::default().fg(Palette::BORDER)).title(Span::styled(menu_title, Style::default().fg(Palette::PRIMARY))));
     f.render_widget(menu_widget, chunks[2]);
     
     // Key hints at bottom
@@ -1277,6 +1288,98 @@ fn render_tutorial(f: &mut Frame, state: &GameState) {
     .style(Styles::dim())
     .alignment(Alignment::Center);
     f.render_widget(hints, chunks[4]);
+}
+
+/// Render meta-progression upgrades shop
+fn render_upgrades(f: &mut Frame, state: &GameState) {
+    let area = f.area();
+    let main_area = Rect::new(area.x, area.y, area.width, area.height.saturating_sub(2));
+    let hint_area = Rect::new(area.x, area.height.saturating_sub(2), area.width, 2);
+    
+    let chunks = Layout::default()
+        .direction(Direction::Vertical)
+        .margin(2)
+        .constraints([
+            Constraint::Length(5),
+            Constraint::Min(10),
+        ])
+        .split(main_area);
+    
+    // Header with ink display
+    let header_text = vec![
+        Line::from(vec![
+            Span::styled("󰙤 ", Style::default().fg(Palette::ACCENT)),
+            Span::styled("INK SHOP", Style::default().fg(Palette::PRIMARY).add_modifier(Modifier::BOLD)),
+            Span::styled(" 󰙤", Style::default().fg(Palette::ACCENT)),
+        ]),
+        Line::from(""),
+        Line::from(vec![
+            Span::raw("Available Ink: "),
+            Span::styled(format!("{}", state.meta_progress.current_ink), Style::default().fg(Palette::ACCENT).add_modifier(Modifier::BOLD)),
+            Span::raw("   Total Earned: "),
+            Span::styled(format!("{}", state.meta_progress.total_ink), Style::default().fg(Palette::SECONDARY)),
+        ]),
+    ];
+    
+    let header = Paragraph::new(header_text)
+        .alignment(Alignment::Center)
+        .block(Block::default().borders(Borders::ALL).border_style(Style::default().fg(Palette::BORDER)));
+    f.render_widget(header, chunks[0]);
+    
+    // Upgrades list
+    let upgrades = state.meta_progress.get_available_upgrades();
+    
+    let items: Vec<ListItem> = if upgrades.is_empty() {
+        vec![ListItem::new(Line::from(vec![
+            Span::styled("No upgrades available yet!", Style::default().fg(Palette::SECONDARY).add_modifier(Modifier::ITALIC)),
+        ]))]
+    } else {
+        upgrades.iter().enumerate().map(|(i, upgrade)| {
+            let is_selected = i == state.menu_index;
+            let can_afford = state.meta_progress.current_ink >= upgrade.cost;
+            
+            let (style, cost_color) = if is_selected {
+                (Style::default().fg(Palette::SECONDARY).add_modifier(Modifier::REVERSED),
+                 if can_afford { Palette::SUCCESS } else { Palette::DANGER })
+            } else {
+                (Style::default().fg(if can_afford { Palette::TEXT } else { Color::DarkGray }),
+                 if can_afford { Palette::TEXT } else { Color::DarkGray })
+            };
+            
+            ListItem::new(vec![
+                Line::from(vec![
+                    Span::styled(format!(" {} ", upgrade.category.icon()), Style::default().fg(Palette::PRIMARY)),
+                    Span::styled(&upgrade.name, style.add_modifier(Modifier::BOLD)),
+                    Span::raw(" "),
+                    Span::styled(format!("[{} Ink]", upgrade.cost), Style::default().fg(cost_color)),
+                ]),
+                Line::from(vec![
+                    Span::raw("   "),
+                    Span::styled(&upgrade.description, Style::default().fg(Color::Gray).add_modifier(Modifier::ITALIC)),
+                ]),
+            ])
+        }).collect()
+    };
+    
+    let list = List::new(items)
+        .block(Block::default()
+            .borders(Borders::ALL)
+            .border_style(Style::default().fg(Palette::BORDER))
+            .title(Span::styled(" 󱃵 Permanent Upgrades ", Style::default().fg(Palette::PRIMARY))));
+    f.render_widget(list, chunks[1]);
+    
+    // Key hints
+    let hints = Paragraph::new(Line::from(vec![
+        Span::styled(" [j/k] ", Styles::keybind()),
+        Span::raw("Navigate  "),
+        Span::styled("[Enter] ", Styles::keybind()),
+        Span::raw("Purchase  "),
+        Span::styled("[Esc] ", Style::default().fg(Palette::WARNING)),
+        Span::raw("Back to Menu"),
+    ]))
+    .alignment(Alignment::Center)
+    .style(Style::default().bg(Palette::BG_PANEL));
+    f.render_widget(hints, hint_area);
 }
 
 /// Render typing feel effects overlay on combat screen
