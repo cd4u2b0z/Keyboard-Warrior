@@ -88,6 +88,8 @@ fn run_game(
                 // Enemy attacks
                 if let Some(player) = &mut game.player {
                     combat.execute_enemy_turn(player);
+                            // Player took damage - trigger feel effects
+                            game.typing_feel.screen_shake = 0.5;
                 }
             }
             
@@ -313,6 +315,8 @@ fn handle_combat_input(game: &mut GameState, key: KeyCode) -> InputResult {
                     if let Some(player) = &mut game.player {
                         if let Some(combat) = &mut game.combat_state {
                             combat.execute_enemy_turn(player);
+                            // Player took damage - trigger feel effects
+                            game.typing_feel.screen_shake = 0.5;
                         }
                     }
                 }
@@ -340,6 +344,10 @@ fn handle_combat_input(game: &mut GameState, key: KeyCode) -> InputResult {
         }
     }
     
+    // Update typing feel effects
+    game.typing_feel.tick(0.016);
+    // Update typing feel effects
+    game.typing_feel.tick(0.016);
     // Check for player death
     game.check_game_over();
     

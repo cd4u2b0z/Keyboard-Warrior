@@ -662,6 +662,9 @@ fn render_combat(f: &mut Frame, state: &GameState) {
         .alignment(Alignment::Center)
         .style(Style::default().bg(Color::Rgb(30, 30, 30)));
         f.render_widget(help, chunks[5]);
+        
+        // Render typing feel overlay
+        render_typing_feel_overlay(f, state, f.area());
     }
 }
 
@@ -1211,4 +1214,123 @@ fn render_tutorial(f: &mut Frame, state: &GameState) {
     .style(Style::default().fg(Color::DarkGray))
     .alignment(Alignment::Center);
     f.render_widget(hints, chunks[4]);
+}
+
+/// Render typing feel effects overlay on combat screen
+fn render_typing_feel_overlay(f: &mut Frame, state: &GameState, area: Rect) {
+    let feel = &state.typing_feel;
+    
+    // Combo display in top-right corner
+    if feel.combo > 0 {
+        let combo_width = 20;
+        let combo_height = 3;
+        let combo_area = Rect::new(
+            area.width.saturating_sub(combo_width + 2),
+            1,
+            combo_width,
+            combo_height,
+        );
+        
+        let combo_text = if feel.combo >= 10 {
+            format!("󱋊 {} COMBO! 󱋊\nx{:.1} DMG", feel.combo, feel.combo_multiplier)
+        } else {
+            format!("󱋊 {} Combo\nx{:.1} DMG", feel.combo, feel.combo_multiplier)
+        };
+        
+        let combo_color = if feel.combo >= 20 {
+            Color::Magenta
+        } else if feel.combo >= 10 {
+            Color::Red
+        } else if feel.combo >= 5 {
+            Color::Yellow
+        } else {
+            Color::Cyan
+        };
+        
+        let combo_widget = Paragraph::new(combo_text)
+            .style(Style::default().fg(combo_color).add_modifier(Modifier::BOLD))
+            .alignment(Alignment::Center)
+            .block(Block::default().borders(Borders::ALL));
+        f.render_widget(combo_widget, combo_area);
+    }
+    
+    // Flow state indicator
+    let flow_desc = feel.flow_description();
+    if !flow_desc.is_empty() {
+        let flow_width = 25;
+        let flow_area = Rect::new(
+            2,
+            1,
+            flow_width,
+            1,
+        );
+        
+        let flow_color = match feel.flow_state {
+            crate::game::typing_feel::FlowState::Transcendent => Color::Magenta,
+            crate::game::typing_feel::FlowState::Flowing => Color::Cyan,
+            crate::game::typing_feel::FlowState::Building => Color::Yellow,
+            crate::game::typing_feel::FlowState::Recovering => Color::Red,
+        };
+        
+        let flow_text = Span::styled(
+            format!("󰔟 {}", flow_desc),
+            Style::default().fg(flow_color).add_modifier(Modifier::ITALIC),
+        );
+        let flow_widget = Paragraph::new(flow_text);
+        f.render_widget(flow_widget, flow_area);
+    }
+    
+    // WPM display
+    if feel.wpm > 0.0 {
+        let wpm_width = 15;
+        let wpm_area = Rect::new(
+            area.width / 2 - wpm_width / 2,
+            area.height.saturating_sub(3),
+            wpm_width,
+            1,
+        );
+        
+        let wpm_color = if feel.wpm >= 80.0 {
+            Color::Magenta
+        } else if feel.wpm >= 60.0 {
+            Color::Yellow
+        } else if feel.wpm >= 40.0 {
+            Color::Cyan
+        } else {
+            Color::White
+        };
+        
+        let wpm_text = Span::styled(
+            format!("󰓅 {:.0} WPM", feel.wpm),
+            Style::default().fg(wpm_color).add_modifier(Modifier::BOLD),
+        );
+        let wpm_widget = Paragraph::new(wpm_text).alignment(Alignment::Center);
+        f.render_widget(wpm_widget, wpm_area);
+    }
+    
+    // Accuracy display
+    if feel.accuracy > 0.0 {
+        let acc_width = 15;
+        let acc_area = Rect::new(
+            2,
+            area.height.saturating_sub(3),
+            acc_width,
+            1,
+        );
+        
+        let acc_color = if feel.accuracy >= 95.0 {
+            Color::Green
+        } else if feel.accuracy >= 85.0 {
+            Color::Yellow
+        } else {
+            Color::Red
+        };
+        
+        let acc_text = Span::styled(
+            format!("󰄬 {:.0}% ACC", feel.accuracy),
+            Style::default().fg(acc_color),
+        );
+        let acc_widget = Paragraph::new(acc_text);
+        f.render_widget(acc_widget, acc_area);
+    }
 }

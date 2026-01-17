@@ -11,6 +11,7 @@ use crate::game::{
     events::GameEvent,
     help_system::{HelpSystem, HintManager},
     tutorial::{TutorialState, TutorialProgress},
+    typing_feel::TypingFeel,
 };
 use crate::data::GameData;
 
@@ -60,6 +61,7 @@ pub struct GameState {
     pub hint_manager: HintManager,
     pub tutorial_state: TutorialState,
     pub tutorial_progress: TutorialProgress,
+    pub typing_feel: TypingFeel,
 }
 
 impl Default for GameState {
@@ -90,6 +92,7 @@ impl GameState {
             hint_manager: HintManager::new(),
             tutorial_state: TutorialState::new(),
             tutorial_progress: TutorialProgress::load(),
+            typing_feel: TypingFeel::new(),
         }
     }
 
