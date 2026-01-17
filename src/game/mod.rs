@@ -41,3 +41,9 @@ pub mod config;
 pub mod stats;
 
 pub mod world_engine;
+
+// Deep lore and narrative systems
+pub mod deep_lore;
+pub mod lore_fragments;
+pub mod encounter_writing;
+pub mod writing_guidelines;
