@@ -75,6 +75,8 @@ pub struct GameState {
     /// Current milestone event being displayed  
     pub current_milestone: Option<String>,
     /// Discovered lore fragments (for journal)
+    /// Floors whose milestones have been shown this run
+    pub milestones_shown: std::collections::HashSet<u32>,
     pub discovered_lore: Vec<(String, String)>,
     /// Faction standings and relationships
     pub faction_relations: FactionRelations,
@@ -117,6 +119,7 @@ impl GameState {
             typing_feel: TypingFeel::new(),
             current_lore: None,
             current_milestone: None,
+            milestones_shown: std::collections::HashSet::new(),
             discovered_lore: Vec::new(),
             faction_relations: FactionRelations::new(),
             meta_progress: MetaProgress::default(),
@@ -140,6 +143,7 @@ impl GameState {
         self.dungeon = Some(Dungeon::new());
         self.scene = Scene::Dungeon;
         self.message_log.clear();
+        self.milestones_shown.clear();
         
         // Show bonus message if any
         if bonus.hp_bonus > 0 || bonus.gold_bonus > 0 {

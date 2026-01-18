@@ -276,16 +276,19 @@ fn handle_dungeon_input(game: &mut GameState, key: KeyCode) -> InputResult {
             // Check for milestone events at special floors
             let floor = game.get_current_floor();
             if let Some(milestone) = get_floor_milestone(floor as u32) {
-                // Only show milestone once per floor (on first room)
-                if let Some(dungeon) = &game.dungeon {
-                    if dungeon.rooms_cleared == 0 && dungeon.current_room.room_type == RoomType::Start {
-                        game.current_milestone = Some(milestone.description);
-                        game.scene = Scene::Milestone;
-                        return InputResult::Continue;
+                // Only show milestone once per floor (on first room) and if not already shown
+                if !game.milestones_shown.contains(&(floor as u32)) {
+                    if let Some(dungeon) = &game.dungeon {
+                        if dungeon.rooms_cleared == 0 && dungeon.current_room.room_type == RoomType::Start {
+                            game.milestones_shown.insert(floor as u32);
+                            game.current_milestone = Some(milestone.description);
+                            game.scene = Scene::Milestone;
+                            return InputResult::Continue;
+                        }
                     }
                 }
             }
-            
+
             // Explore - go to next room
             if let Some(dungeon) = &mut game.dungeon {
                 let room = dungeon.generate_next_room();
