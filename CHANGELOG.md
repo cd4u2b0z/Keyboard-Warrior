@@ -1,16 +1,68 @@
-## Changelog
+# Changelog
 
-All notable changes to Keyboard Warrior will be documented in this file.
+All notable changes to **Keyboard Warrior** will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+---
+
 ## [Unreleased]
 
 ### Planned
-- Save/load game state
-- Wire up dormant narrative systems to gameplay
-- Balance pass (once things are connected)
+- Save/load persistence
+- Ink currency persistence between runs
+- Balance tuning pass
+
+---
+
+## [0.4.1] - 2026-01-17
+
+### 🎮 Lore-Integrated Typing System
+
+The words you type during combat are no longer random - they are woven into the narrative!
+
+### Added - Lore Words Module (src/data/lore_words.rs)
+- **Zone-Specific Word Pools**: Each zone has thematic words
+  - Shattered Halls: throne, crown, knight, oath, valdris, sundering
+  - Sunken Archives: scroll, tome, codex, wisdom, forbidden, ritual
+  - Blighted Gardens: blight, rot, decay, purify, cleanse, restore
+  - Clockwork Depths: gear, cog, mechanism, sentinel, guardian
+  - Voids Edge: void, nothing, breach, archon, herald, doom
+  - The Breach: seal, hero, destiny, salvation, redemption
+
+### Added - Zone-Specific Sentences
+- Each area has ~10 unique sentences that tell the story as you fight:
+  - "The throne sits empty, but the oaths still bind."
+  - "Malachar studied here before his fall from grace."
+  - "The Elder Stones pulse with power that predates creation."
+
+### Added - Enemy-Specific Word Themes
+- Goblin enemies use greedy words: shiny, mine, steal, hoard
+- Undead enemies use hollow words: oath, duty, eternal, forgotten
+- Spectral enemies use ethereal words: wisp, shimmer, essence, regret
+- Corrupted enemies use twisted words: blight, wrong, torment, purify
+- Mechanical enemies use precise words: gear, protocol, directive
+- Void enemies use cosmic words: nothing, emptiness, oblivion, silence
+
+### Added - Boss-Specific Dialogue
+- The Hollow Knight: "I am the last defender of a kingdom that no longer exists."
+- The Void Herald: "I speak with the voice of endings. Listen, and despair."
+
+### Added - Narrative Progression
+- Early game sentences establish the world
+- Mid game reveals the truth about Malachar
+- Late game builds to the final confrontation
+
+### Changed - Combat System
+- CombatState now tracks floor number
+- Word/sentence generation uses lore-appropriate content
+- Boss battles feature unique dialogue from that boss
+
+### Impact
+- Every word typed now connects to the lore
+- Players learn the story through gameplay
+- Typing becomes an act of narrative discovery
 
 ---
 

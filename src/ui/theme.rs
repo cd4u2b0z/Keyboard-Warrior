@@ -55,6 +55,14 @@ impl Palette {
     pub const FLOW_FLOWING: Color = Color::Rgb(100, 200, 255);     // Cyan
     pub const FLOW_TRANSCENDENT: Color = Color::Rgb(255, 100, 255); // Magenta
     pub const FLOW_RECOVERING: Color = Color::Rgb(200, 100, 100);  // Faded red
+    
+    // Zone-specific colors
+    pub const ZONE_SHATTERED_HALLS: Color = Color::Rgb(140, 140, 160);   // Stone gray
+    pub const ZONE_SUNKEN_ARCHIVES: Color = Color::Rgb(80, 180, 200);    // Deep cyan
+    pub const ZONE_BLIGHTED_GARDENS: Color = Color::Rgb(100, 180, 80);   // Sickly green
+    pub const ZONE_CLOCKWORK_DEPTHS: Color = Color::Rgb(220, 180, 60);   // Brass yellow
+    pub const ZONE_VOIDS_EDGE: Color = Color::Rgb(180, 80, 220);         // Void purple
+    pub const ZONE_THE_BREACH: Color = Color::Rgb(220, 60, 60);          // Blood red
 }
 
 /// Nerd Font icons used throughout the UI
@@ -420,5 +428,18 @@ pub fn accuracy_color(accuracy: f32) -> Color {
         Palette::WARNING
     } else {
         Palette::DANGER
+    }
+}
+
+/// Get color for a zone based on its name
+pub fn zone_color(zone_name: &str) -> Color {
+    match zone_name {
+        "Shattered Halls" => Palette::ZONE_SHATTERED_HALLS,
+        "Sunken Archives" => Palette::ZONE_SUNKEN_ARCHIVES,
+        "Blighted Gardens" => Palette::ZONE_BLIGHTED_GARDENS,
+        "Clockwork Depths" => Palette::ZONE_CLOCKWORK_DEPTHS,
+        "Void's Edge" => Palette::ZONE_VOIDS_EDGE,
+        "The Breach" => Palette::ZONE_THE_BREACH,
+        _ => Palette::PRIMARY, // Default fallback
     }
 }

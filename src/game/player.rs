@@ -285,7 +285,7 @@ impl Player {
         }
         
         // Recalculate max HP/MP
-        self.max_hp = self.class.base_hp() + (self.stats.vitality * 5);
+        self.max_hp = self.class.base_hp() + (self.stats.vitality * 8);
         self.max_mp = self.class.base_mp() + (self.stats.intellect * 3);
         
         // Full heal on level up!

@@ -29,6 +29,7 @@ pub struct CombatState {
     pub game_data: Arc<GameData>,
     pub difficulty: u32,
     pub use_sentences: bool,
+    pub floor: u32,
     /// Whether player is in spell casting mode
     pub spell_mode: bool,
     /// Currently selected spell index
@@ -62,13 +63,13 @@ pub struct CombatResult {
 }
 
 impl CombatState {
-    pub fn new(enemy: Enemy, game_data: Arc<GameData>, difficulty: u32) -> Self {
+    pub fn new(enemy: Enemy, game_data: Arc<GameData>, difficulty: u32, floor: u32) -> Self {
         // Use sentences for bosses or high difficulty, otherwise words
         let use_sentences = enemy.is_boss || difficulty >= 5;
         let starting_word = if use_sentences {
-            game_data.get_sentence(difficulty.min(10))
+            game_data.get_lore_sentence(floor, enemy.is_boss, Some(&enemy.name))
         } else {
-            game_data.get_word(difficulty.min(10))
+            game_data.get_lore_word(floor, Some(&enemy.typing_theme))
         };
         
         // Adjust time limit based on content length
@@ -100,6 +101,7 @@ impl CombatState {
             game_data,
             difficulty,
             use_sentences,
+            floor,
             spell_mode: false,
             selected_spell: None,
             spell_incantation: None,
@@ -225,7 +227,9 @@ impl CombatState {
             return;
         }
 
-        let damage = self.enemy.attack_power;
+        let raw_damage = self.enemy.attack_power;
+        let defense_reduction = (player.stats.vitality as f32 * 0.5).floor() as i32;
+        let damage = (raw_damage - defense_reduction).max(1);
         let actual_damage = if self.player_shield > 0 {
             let absorbed = damage.min(self.player_shield);
             self.player_shield -= absorbed;
@@ -250,9 +254,9 @@ impl CombatState {
             self.turn += 1;
             // Start next player turn with new content from game data
             self.current_word = if self.use_sentences {
-                self.game_data.get_sentence(self.difficulty.min(10))
+                self.game_data.get_lore_sentence(self.floor, self.enemy.is_boss, Some(&self.enemy.name))
             } else {
-                self.game_data.get_word(self.difficulty.min(10))
+                self.game_data.get_lore_word(self.floor, Some(&self.enemy.typing_theme))
             };
             
             // Adjust time based on content length

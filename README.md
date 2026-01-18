@@ -10,8 +10,8 @@
 
 [![Rust](https://img.shields.io/badge/Rust-1.70+-DEA584?style=flat&logo=rust&logoColor=white)](https://www.rust-lang.org/)
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat)](LICENSE)
-[![Version](https://img.shields.io/badge/Version-0.4.0-blue?style=flat)](CHANGELOG.md)
-[![Status](https://img.shields.io/badge/Status-Experimental_🧪-yellow?style=flat)]()
+[![Version](https://img.shields.io/badge/Version-0.4.1-blue?style=flat)](CHANGELOG.md)
+[![Status](https://img.shields.io/badge/Status-Active_Development_🔥-orange?style=flat)]()
 [![TUI](https://img.shields.io/badge/TUI-ratatui-purple?style=flat)](https://github.com/ratatui-org/ratatui)
 
 ---
@@ -22,9 +22,10 @@
 
 It currently exists in a *largely disconnected state*. There's ~24,000 lines of code across 48 modules, but honestly? About 40% of that is dormant scaffolding waiting to be wired up. The vision is grand. The reality is messier.
 
-### What Actually Works (v0.4.0)
-- ✅ Full 10-floor dungeon progression
+### What Actually Works (v0.4.1)
+- ✅ Full 10-floor dungeon progression with zone-themed encounters
 - ✅ Combat with typing, combos, and flow states
+- ✅ **Lore-integrated typing** — words match the zone, enemy, and story
 - ✅ 5 playable classes with distinct stats
 - ✅ Basic spellcasting (Tab to toggle, 1-9 to select)
 - ✅ Items, shops, rest sites, treasure rooms
@@ -32,8 +33,10 @@ It currently exists in a *largely disconnected state*. There's ~24,000 lines of 
 - ✅ Help overlay (press `?`)
 - ✅ Meta-progression with Ink shop (buy permanent upgrades!)
 - ✅ Faction reputation system (displayed in Stats)
+- ✅ Boss-specific dialogue during boss fights
+- ✅ Narrative progression through typed sentences
 
-### What's Dormant (~10,000 Lines)
+### What's Dormant (~9,000 Lines)
 These systems have been written with full high-fantasy lore but aren't connected to gameplay yet:
 - 🔸 **Deep Lore** (1,016 lines) — Three Ages, The Sundering, Malachar the Archon, faction histories
 - 🔸 **Lore Fragments** (752 lines) — Discoverable pieces of world history
@@ -42,7 +45,7 @@ These systems have been written with full high-fantasy lore but aren't connected
 - 🔸 **Voice System** (794 lines) — NPC personality/dialogue for 5 factions
 - 🔸 **Characters & Quests** (329 + 368 lines) — NPCs and quest framework
 - 🔸 **Skills** (490 lines) — Active/passive skill trees
-- 🔸 **Typing Context** (754 lines) — Thematic word generation
+- ~~🔸 **Typing Context** (754 lines) — Thematic word generation~~ ✅ **Now wired via lore_words.rs!**
 - 🔸 **Encounter Writing** (783 lines) — Authored events
 - 🔸 **Run Modifiers** (632 lines) — Challenge variants
 
@@ -295,10 +298,17 @@ keyboard-warrior/
 │   │   ├── theme.rs               # Colors, icons, styles (424)
 │   │   └── lore_render.rs         # Lore display (80)
 │   │
-│   └── data/                      # Static content (~1,350 lines)
+│   └── data/                      # Static content (~1,700 lines)
+│       ├── mod.rs                 # Data exports, lore word methods (180)
 │       ├── enemies.rs             # Enemy templates (555)
 │       ├── sentences.rs           # Word lists (490)
-│       └── word_lists.rs          # More words (155)
+│       ├── word_lists.rs          # More words (155)
+│       └── lore_words.rs          # ✅ Zone/enemy/boss word pools (350)
+│
+├── .github/                       # GitHub configuration
+│   ├── workflows/ci.yml           # CI pipeline (Rust checks, cross-build)
+│   ├── ISSUE_TEMPLATE/            # Bug report, feature request templates
+│   └── PULL_REQUEST_TEMPLATE.md   # PR template
 │
 ├── Cargo.toml
 ├── CHANGELOG.md
@@ -309,7 +319,7 @@ keyboard-warrior/
 🗑️ = Legacy/deprecated
 ```
 
-**~24,000 lines of Rust** across 48 source files.
+**~24,500 lines of Rust** across 49 source files.
 
 ---
 
@@ -329,6 +339,14 @@ keyboard-warrior/
 - [x] Replace bosses (The Hollow Knight, The Void Herald)
 - [x] Fantasy enemy names and descriptions (14 enemies)
 - [x] Complete world cosmology with player mystery and multiple endings
+
+### v0.4.1 — Lore-Integrated Typing ✅
+- [x] Zone-specific word pools (30+ words per zone)
+- [x] Zone-specific sentences that tell the story
+- [x] Enemy-type word themes (goblin, undead, spectral, corrupted, mechanical, void)
+- [x] Boss-specific dialogue (Hollow Knight, Void Herald unique lines)
+- [x] Narrative progression (early/mid/late game sentences)
+- [x] Combat system wired to use lore words instead of generic words
 
 ### v0.5.0 — Persistence & Polish
 - [ ] Save/load game state

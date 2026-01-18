@@ -163,7 +163,7 @@ impl GameState {
     pub fn start_combat(&mut self, enemy: Enemy) {
         self.current_enemy = Some(enemy.clone());
         let difficulty = self.dungeon.as_ref().map(|d| d.current_floor as u32).unwrap_or(1);
-        self.combat_state = Some(CombatState::new(enemy, self.game_data.clone(), difficulty));
+        self.combat_state = Some(CombatState::new(enemy, self.game_data.clone(), difficulty, difficulty));
         self.scene = Scene::Combat;
         if let Some(e) = &self.current_enemy {
             self.add_message(&format!("{} appears!", e.name));

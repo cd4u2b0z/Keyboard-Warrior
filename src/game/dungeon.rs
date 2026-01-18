@@ -128,48 +128,51 @@ impl Dungeon {
 
     fn get_room_description(&self, room_type: RoomType) -> String {
         let mut rng = rand::thread_rng();
+        // Use ambient messages from world_integration based on current zone
+        let ambient = get_ambient_message(self.current_floor as u32);
+        
         match room_type {
             RoomType::Combat => {
                 let descriptions = [
                     "Something stirs in the shadows...",
-                    "You hear the clacking of keys ahead.",
                     "A hostile presence blocks your path!",
-                    "The air crackles with static electricity.",
-                    "Error messages flash on distant screens.",
+                    "The air grows thick with malice.",
+                    "You sense danger ahead.",
+                    "Ancient guardians still patrol these halls.",
                 ];
-                descriptions[rng.gen_range(0..descriptions.len())].to_string()
+                format!("{}\n\n{}", ambient, descriptions[rng.gen_range(0..descriptions.len())])
             }
             RoomType::Elite => {
                 let descriptions = [
                     "A powerful enemy awaits!",
-                    "The ground trembles with each keystroke.",
+                    "The air crackles with fell energy.",
                     "A formidable foe guards this chamber.",
                 ];
-                descriptions[rng.gen_range(0..descriptions.len())].to_string()
+                format!("{}\n\n{}", ambient, descriptions[rng.gen_range(0..descriptions.len())])
             }
             RoomType::Treasure => {
                 let descriptions = [
                     "A glittering chest catches your eye!",
                     "Something valuable lies ahead.",
-                    "You spot a mysterious package.",
+                    "Treasure, perhaps left by those who fled.",
                 ];
-                descriptions[rng.gen_range(0..descriptions.len())].to_string()
+                format!("{}\n\n{}", ambient, descriptions[rng.gen_range(0..descriptions.len())])
             }
             RoomType::Rest => {
                 let descriptions = [
                     "A peaceful campfire flickers invitingly.",
-                    "A comfortable keyboard rest awaits.",
-                    "A save point glows softly in the darkness.",
+                    "A moment of respite in the darkness.",
+                    "A sanctuary from the encroaching void.",
                 ];
-                descriptions[rng.gen_range(0..descriptions.len())].to_string()
+                format!("{}\n\n{}", ambient, descriptions[rng.gen_range(0..descriptions.len())])
             }
             RoomType::Shop => {
                 let descriptions = [
-                    "A mysterious merchant has set up shop.",
-                    "\"Welcome, weary typist...\"",
-                    "Goods and wares line the walls.",
+                    "A mysterious merchant has survived here.",
+                    "\"Welcome, weary traveler...\"",
+                    "Goods salvaged from the fallen kingdom.",
                 ];
-                descriptions[rng.gen_range(0..descriptions.len())].to_string()
+                format!("{}\n\n{}", ambient, descriptions[rng.gen_range(0..descriptions.len())])
             }
             RoomType::Event => {
                 let descriptions = [
@@ -177,9 +180,9 @@ impl Dungeon {
                     "An interesting situation presents itself.",
                     "The unexpected awaits around the corner.",
                 ];
-                descriptions[rng.gen_range(0..descriptions.len())].to_string()
+                format!("{}\n\n{}", ambient, descriptions[rng.gen_range(0..descriptions.len())])
             }
-            RoomType::Start => "Your journey begins here.".to_string(),
+            RoomType::Start => format!("{}\n\nYour journey begins here.", ambient),
             RoomType::Boss => self.get_boss_room_description(),
         }
     }

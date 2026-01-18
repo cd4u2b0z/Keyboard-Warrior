@@ -7,6 +7,8 @@
 pub mod sentences;
 pub mod word_lists;
 pub mod enemies;
+pub mod lore_words;
+pub use lore_words::LoreWords;
 
 use std::fs;
 use std::path::Path;
@@ -145,5 +147,62 @@ impl GameData {
             .into_iter()
             .map(|e| e.text.clone())
             .collect()
+    }
+}
+
+impl GameData {
+    /// Get a lore-appropriate word for the current floor and enemy
+    pub fn get_lore_word(&self, floor: u32, enemy_theme: Option<&str>) -> String {
+        LoreWords::random_word(floor, enemy_theme)
+    }
+    
+    /// Get a lore-appropriate sentence for the current floor and enemy
+    pub fn get_lore_sentence(&self, floor: u32, is_boss: bool, boss_name: Option<&str>) -> String {
+        LoreWords::random_sentence(floor, is_boss, boss_name)
+    }
+    
+    /// Get a word pool appropriate for the zone
+    pub fn get_lore_word_pool(&self, floor: u32, enemy_theme: Option<&str>) -> Vec<String> {
+        let mut pool: Vec<String> = LoreWords::get_zone_words(floor)
+            .into_iter()
+            .map(|s| s.to_string())
+            .collect();
+        
+        if let Some(theme) = enemy_theme {
+            pool.extend(
+                LoreWords::get_enemy_words(theme)
+                    .into_iter()
+                    .map(|s| s.to_string())
+            );
+        }
+        
+        pool
+    }
+    
+    /// Get a sentence pool appropriate for combat
+    pub fn get_lore_sentence_pool(&self, floor: u32, is_boss: bool, boss_name: Option<&str>) -> Vec<String> {
+        if is_boss {
+            if let Some(name) = boss_name {
+                let boss_sentences = match name {
+                    n if n.contains("Hollow Knight") => LoreWords::hollow_knight_sentences(),
+                    n if n.contains("Void Herald") => LoreWords::void_herald_sentences(),
+                    _ => LoreWords::get_zone_sentences(floor),
+                };
+                return boss_sentences.iter().map(|s| s.to_string()).collect();
+            }
+        }
+        
+        let mut pool: Vec<String> = LoreWords::get_zone_sentences(floor)
+            .into_iter()
+            .map(|s| s.to_string())
+            .collect();
+        
+        pool.extend(
+            LoreWords::get_narrative_sentences(floor)
+                .into_iter()
+                .map(|s| s.to_string())
+        );
+        
+        pool
     }
 }

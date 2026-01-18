@@ -10,7 +10,7 @@ use ratatui::{
 use crate::game::state::{GameState, Scene};
 use crate::game::combat::CombatPhase;
 use crate::game::help_system::{HelpSystem, HelpTab, TipPriority};
-use crate::ui::theme::{Palette, Icons, Styles, hp_color, combo_color, wpm_color, accuracy_color};
+use crate::ui::theme::{Palette, Icons, Styles, hp_color, combo_color, wpm_color, accuracy_color, zone_color};
 use crate::ui::lore_render::{render_lore_discovery, render_milestone};
 
 pub fn render(f: &mut Frame, state: &GameState) {
@@ -431,7 +431,7 @@ fn render_class_select(f: &mut Frame, state: &GameState) {
     let title = Paragraph::new("Choose Your Class")
         .style(Style::default().fg(Palette::WARNING).add_modifier(Modifier::BOLD))
         .alignment(Alignment::Center)
-        .block(Block::default().borders(Borders::ALL));
+        .block(Block::default().borders(Borders::ALL).border_style(Style::default().fg(zone_color(&state.dungeon.as_ref().map(|d| d.zone_name.as_str()).unwrap_or("Unknown")))));
     f.render_widget(title, chunks[0]);
 
     let classes = vec![
@@ -505,7 +505,7 @@ fn render_dungeon(f: &mut Frame, state: &GameState) {
     let header = Paragraph::new(format!("Floor {} — {}", floor, zone_name))
         .style(Styles::title())
         .alignment(Alignment::Center)
-        .block(Block::default().borders(Borders::ALL).border_style(Style::default().fg(Palette::PRIMARY)));
+        .block(Block::default().borders(Borders::ALL).border_style(Style::default().fg(zone_color(&zone_name))));
     f.render_widget(header, chunks[0]);
 
     // Player stats
@@ -590,9 +590,9 @@ fn render_combat(f: &mut Frame, state: &GameState) {
             enemy.battle_cry
         );
         let enemy_widget = Paragraph::new(enemy_display)
-            .style(Style::default().fg(Palette::DANGER))
+            .style(Style::default().fg(zone_color(&state.dungeon.as_ref().map(|d| d.zone_name.as_str()).unwrap_or("Unknown"))))
             .alignment(Alignment::Center)
-            .block(Block::default().borders(Borders::ALL));
+            .block(Block::default().borders(Borders::ALL).border_style(Style::default().fg(zone_color(&state.dungeon.as_ref().map(|d| d.zone_name.as_str()).unwrap_or("Unknown")))));
         f.render_widget(enemy_widget, chunks[0]);
 
         // Enemy HP bar
@@ -729,7 +729,7 @@ fn render_shop(f: &mut Frame, state: &GameState) {
     let header = Paragraph::new(format!("Welcome to the Keyboard Emporium!\n\nYour Gold: {}", gold))
         .style(Styles::keybind())
         .alignment(Alignment::Center)
-        .block(Block::default().borders(Borders::ALL));
+        .block(Block::default().borders(Borders::ALL).border_style(Style::default().fg(zone_color(&state.dungeon.as_ref().map(|d| d.zone_name.as_str()).unwrap_or("Unknown")))));
     f.render_widget(header, chunks[0]);
 
     let items: Vec<ListItem> = state.shop_items
@@ -831,20 +831,20 @@ fn render_event(f: &mut Frame, state: &GameState) {
         let title = Paragraph::new(&*event.name)
             .style(Style::default().fg(Palette::ACCENT).add_modifier(Modifier::BOLD))
             .alignment(Alignment::Center)
-            .block(Block::default().borders(Borders::ALL));
+            .block(Block::default().borders(Borders::ALL).border_style(Style::default().fg(zone_color(&state.dungeon.as_ref().map(|d| d.zone_name.as_str()).unwrap_or("Unknown")))));
         f.render_widget(title, chunks[0]);
 
         let art = Paragraph::new(&*event.ascii_art)
             .style(Style::default().fg(Palette::PRIMARY))
             .alignment(Alignment::Center)
-            .block(Block::default().borders(Borders::ALL));
+            .block(Block::default().borders(Borders::ALL).border_style(Style::default().fg(zone_color(&state.dungeon.as_ref().map(|d| d.zone_name.as_str()).unwrap_or("Unknown")))));
         f.render_widget(art, chunks[1]);
 
         let desc = Paragraph::new(&*event.description)
             .style(Style::default().fg(Palette::TEXT))
             .alignment(Alignment::Center)
             .wrap(Wrap { trim: true })
-            .block(Block::default().borders(Borders::ALL));
+            .block(Block::default().borders(Borders::ALL).border_style(Style::default().fg(zone_color(&state.dungeon.as_ref().map(|d| d.zone_name.as_str()).unwrap_or("Unknown")))));
         f.render_widget(desc, chunks[2]);
 
         let choices: Vec<ListItem> = event.choices
@@ -884,7 +884,7 @@ fn render_inventory(f: &mut Frame, state: &GameState) {
     let title = Paragraph::new("Inventory")
         .style(Style::default().fg(Palette::WARNING).add_modifier(Modifier::BOLD))
         .alignment(Alignment::Center)
-        .block(Block::default().borders(Borders::ALL));
+        .block(Block::default().borders(Borders::ALL).border_style(Style::default().fg(zone_color(&state.dungeon.as_ref().map(|d| d.zone_name.as_str()).unwrap_or("Unknown")))));
     f.render_widget(title, chunks[0]);
 
     if let Some(player) = &state.player {
@@ -906,7 +906,7 @@ fn render_inventory(f: &mut Frame, state: &GameState) {
             let empty = Paragraph::new("Your inventory is empty...")
                 .style(Styles::dim())
                 .alignment(Alignment::Center)
-                .block(Block::default().borders(Borders::ALL));
+                .block(Block::default().borders(Borders::ALL).border_style(Style::default().fg(zone_color(&state.dungeon.as_ref().map(|d| d.zone_name.as_str()).unwrap_or("Unknown")))));
             f.render_widget(empty, chunks[1]);
         } else {
             let inv_list = List::new(items)
@@ -936,7 +936,7 @@ fn render_stats(f: &mut Frame, state: &GameState) {
     let title = Paragraph::new("Character Stats")
         .style(Style::default().fg(Palette::WARNING).add_modifier(Modifier::BOLD))
         .alignment(Alignment::Center)
-        .block(Block::default().borders(Borders::ALL));
+        .block(Block::default().borders(Borders::ALL).border_style(Style::default().fg(zone_color(&state.dungeon.as_ref().map(|d| d.zone_name.as_str()).unwrap_or("Unknown")))));
     f.render_widget(title, chunks[0]);
 
     if let Some(player) = &state.player {
@@ -975,7 +975,7 @@ fn render_stats(f: &mut Frame, state: &GameState) {
         
         let stats = Paragraph::new(stats_text)
             .style(Style::default().fg(Palette::TEXT))
-            .block(Block::default().borders(Borders::ALL));
+            .block(Block::default().borders(Borders::ALL).border_style(Style::default().fg(zone_color(&state.dungeon.as_ref().map(|d| d.zone_name.as_str()).unwrap_or("Unknown")))));
         f.render_widget(stats, chunks[1]);
     }
 
@@ -992,7 +992,7 @@ fn render_stats(f: &mut Frame, state: &GameState) {
     let faction_widget = Paragraph::new(faction_text)
         .style(Style::default().fg(Color::Cyan))
         .alignment(Alignment::Center)
-        .block(Block::default().borders(Borders::ALL));
+        .block(Block::default().borders(Borders::ALL).border_style(Style::default().fg(zone_color(&state.dungeon.as_ref().map(|d| d.zone_name.as_str()).unwrap_or("Unknown")))));
     f.render_widget(faction_widget, chunks[2]);
     
     let help = Paragraph::new("Press any key to return")
@@ -1060,7 +1060,7 @@ fn render_game_over(f: &mut Frame, state: &GameState) {
     let stats_widget = Paragraph::new(stats)
         .style(Style::default().fg(Palette::TEXT))
         .alignment(Alignment::Center)
-        .block(Block::default().borders(Borders::ALL));
+        .block(Block::default().borders(Borders::ALL).border_style(Style::default().fg(zone_color(&state.dungeon.as_ref().map(|d| d.zone_name.as_str()).unwrap_or("Unknown")))));
     f.render_widget(stats_widget, chunks[1]);
 
     let help = Paragraph::new(Line::from(vec![Span::styled("󰓥 ", Style::default().fg(Palette::SUCCESS)), Span::styled("[R] Try Again  ", Styles::keybind()), Span::styled("󰅖 ", Style::default().fg(Palette::DANGER)), Span::styled("[Q] Quit", Style::default().fg(Palette::DANGER))]))
@@ -1113,7 +1113,7 @@ fn render_victory(f: &mut Frame, state: &GameState) {
     let stats_widget = Paragraph::new(stats)
         .style(Style::default().fg(Palette::TEXT))
         .alignment(Alignment::Center)
-        .block(Block::default().borders(Borders::ALL));
+        .block(Block::default().borders(Borders::ALL).border_style(Style::default().fg(zone_color(&state.dungeon.as_ref().map(|d| d.zone_name.as_str()).unwrap_or("Unknown")))));
     f.render_widget(stats_widget, chunks[1]);
 
     let help = Paragraph::new(Line::from(vec![Span::styled("󰓥 ", Style::default().fg(Palette::SUCCESS)), Span::styled("[N] New Game+  ", Styles::keybind()), Span::styled("󰅖 ", Style::default().fg(Palette::DANGER)), Span::styled("[Q] Quit", Style::default().fg(Palette::DANGER))]))
@@ -1416,7 +1416,7 @@ fn render_typing_feel_overlay(f: &mut Frame, state: &GameState, area: Rect) {
         let combo_widget = Paragraph::new(combo_text)
             .style(Style::default().fg(combo_color).add_modifier(Modifier::BOLD))
             .alignment(Alignment::Center)
-            .block(Block::default().borders(Borders::ALL));
+            .block(Block::default().borders(Borders::ALL).border_style(Style::default().fg(zone_color(&state.dungeon.as_ref().map(|d| d.zone_name.as_str()).unwrap_or("Unknown")))));
         f.render_widget(combo_widget, combo_area);
     }
     

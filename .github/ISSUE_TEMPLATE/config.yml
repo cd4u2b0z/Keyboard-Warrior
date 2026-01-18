@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 📚 Check the README
+    url: https://github.com/cd4u2b0z/typingquest/blob/main/README.md
+    about: Many questions are answered in the README, including project status and known issues.
+  - name: 📝 View the Changelog
+    url: https://github.com/cd4u2b0z/typingquest/blob/main/CHANGELOG.md
+    about: Check what's changed in recent versions.
