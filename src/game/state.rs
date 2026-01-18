@@ -2,6 +2,7 @@
 
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
+use std::collections::HashMap;
 use crate::game::{
     player::Player,
     enemy::Enemy,
@@ -17,6 +18,8 @@ use crate::game::{
     event_bus::{EventBus, GameEvent as BusEvent, CombatOutcome},
     narrative_seed::{NarrativeSeed, TypingModifier},
     skills::SkillTree,
+    voice_system::{FactionVoice, build_faction_voices, generate_faction_dialogue, DialogueContext},
+    narrative::Faction,
 };
 use crate::data::GameData;
 
@@ -97,6 +100,10 @@ pub struct GameState {
     pub active_typing_modifier: Option<TypingModifier>,
     /// Player skill tree
     pub skill_tree: SkillTree,
+    /// Faction voice profiles for NPC dialogue
+    pub faction_voices: HashMap<Faction, FactionVoice>,
+    /// Current NPC dialogue (if any)
+    pub current_npc_dialogue: Option<(String, String)>,
 }
 
 impl Default for GameState {
@@ -140,6 +147,8 @@ impl GameState {
             narrative_seed: None,
             active_typing_modifier: None,
             skill_tree: SkillTree::new(),
+            faction_voices: build_faction_voices(),
+            current_npc_dialogue: None,
         }
     }
 
@@ -323,6 +332,7 @@ impl GameState {
             dungeon.current_room.cleared = true;
             dungeon.rooms_cleared += 1;
         }
+        self.current_npc_dialogue = None;
     }
 
 
@@ -349,11 +359,52 @@ impl GameState {
         self.shop_items = items;
         self.scene = Scene::Shop;
         self.menu_index = 0;
+        
+        // Generate merchant greeting based on faction standing
+        let greeting = self.get_merchant_greeting();
+        self.current_npc_dialogue = Some(("Merchant".to_string(), greeting));
     }
 
     pub fn enter_rest(&mut self) {
         self.scene = Scene::Rest;
         self.menu_index = 0;
+        
+        // Generate Temple of Dawn greeting for rest sites
+        let greeting = self.generate_npc_dialogue(Faction::TempleOfDawn, DialogueContext::Greeting);
+        self.current_npc_dialogue = Some(("Healer".to_string(), greeting));
+    }
+    
+    /// Generate faction-appropriate NPC dialogue
+    pub fn generate_npc_dialogue(&self, faction: Faction, context: DialogueContext) -> String {
+        let mut rng = rand::thread_rng();
+        if let Some(voice) = self.faction_voices.get(&faction) {
+            generate_faction_dialogue(voice, context, &mut rng)
+        } else {
+            "...".to_string()
+        }
+    }
+    
+    /// Get a greeting from a merchant based on faction standings
+    pub fn get_merchant_greeting(&self) -> String {
+        let mut rng = rand::thread_rng();
+        
+        // Merchant Consortium is the trading faction
+        let faction = Faction::MerchantConsortium;
+        let standing = self.faction_relations.standing(&faction);
+        
+        if let Some(voice) = self.faction_voices.get(&faction) {
+            // Context depends on standing
+            let context = if standing >= 50 {
+                DialogueContext::Gratitude
+            } else if standing <= -50 {
+                DialogueContext::Warning
+            } else {
+                DialogueContext::Trading
+            };
+            generate_faction_dialogue(voice, context, &mut rng)
+        } else {
+            "Welcome to my shop, traveler.".to_string()
+        }
     }
 
     pub fn check_game_over(&mut self) -> bool {
