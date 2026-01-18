@@ -20,6 +20,7 @@ use crate::game::{
     skills::SkillTree,
     voice_system::{FactionVoice, build_faction_voices, generate_faction_dialogue, DialogueContext},
     narrative::Faction,
+    encounter_writing::{AuthoredEncounter, EncounterTracker, build_encounters},
 };
 use crate::data::GameData;
 
@@ -104,6 +105,12 @@ pub struct GameState {
     pub faction_voices: HashMap<Faction, FactionVoice>,
     /// Current NPC dialogue (if any)
     pub current_npc_dialogue: Option<(String, String)>,
+    /// All authored encounters
+    pub encounters: HashMap<String, AuthoredEncounter>,
+    /// Tracks which encounters have been seen/choices made
+    pub encounter_tracker: EncounterTracker,
+    /// Current authored encounter being displayed
+    pub current_encounter: Option<AuthoredEncounter>,
 }
 
 impl Default for GameState {
@@ -149,6 +156,9 @@ impl GameState {
             skill_tree: SkillTree::new(),
             faction_voices: build_faction_voices(),
             current_npc_dialogue: None,
+            encounters: build_encounters(),
+            encounter_tracker: EncounterTracker::new(),
+            current_encounter: None,
         }
     }
 
@@ -406,6 +416,67 @@ impl GameState {
             "Welcome to my shop, traveler.".to_string()
         }
     }
+    
+    /// Try to trigger an authored encounter for the current location
+    pub fn try_trigger_encounter(&mut self) -> bool {
+        let floor = self.get_current_floor();
+        let location = format!("floor_{}", floor);
+        
+        // Find a valid encounter for this location
+        let valid_encounter = self.encounters.values()
+            .find(|e| {
+                // Check location
+                e.valid_locations.iter().any(|loc| loc == &location || loc == "any")
+                // Check not already completed (unless repeatable)
+                && (e.repeatable || !self.encounter_tracker.has_completed(&e.id))
+                // Check chapter requirements
+                && e.requirements.min_chapter.map_or(true, |min| floor >= min as i32)
+                && e.requirements.max_chapter.map_or(true, |max| floor <= max as i32)
+            })
+            .cloned();
+        
+        if let Some(encounter) = valid_encounter {
+            self.current_encounter = Some(encounter);
+            return true;
+        }
+        false
+    }
+    
+    /// Resolve an encounter choice
+    pub fn resolve_encounter(&mut self, choice_idx: usize) {
+        if let Some(encounter) = self.current_encounter.take() {
+            if let Some(choice) = encounter.choices.get(choice_idx) {
+                // Record the choice
+                self.encounter_tracker.complete_encounter(&encounter.id, &choice.id);
+                
+                // Apply consequences
+                let cons = &encounter.consequences;
+                for (faction_name, change) in &cons.reputation_changes {
+                    // Try to map faction name to enum
+                    let faction: Option<Faction> = match faction_name.as_str() {
+                        "MagesGuild" => Some(Faction::MagesGuild),
+                        "TempleOfDawn" => Some(Faction::TempleOfDawn),
+                        "ShadowGuild" => Some(Faction::ShadowGuild),
+                        "MerchantConsortium" => Some(Faction::MerchantConsortium),
+                        "RangersOfTheWild" => Some(Faction::RangersOfTheWild),
+                        _ => None,
+                    };
+                    if let Some(f) = faction {
+                        self.faction_relations.modify_standing(f, *change);
+                    }
+                }
+                
+                // Emit event
+                self.event_bus.emit(BusEvent::RandomEncounter {
+                    encounter_type: encounter.title.clone(),
+                    location: format!("floor_{}", self.get_current_floor()),
+                });
+                
+                self.add_message(&format!("Completed: {}", encounter.title));
+            }
+        }
+    }
+
 
     pub fn check_game_over(&mut self) -> bool {
         if let Some(player) = &self.player {
