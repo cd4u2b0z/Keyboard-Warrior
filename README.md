@@ -258,7 +258,7 @@ keyboard-warrior/
 ├── src/
 │   ├── main.rs                    # Game loop, input handling (820 lines)
 │   │
-│   ├── game/                      # Core game logic (~19,000 lines, 37 files)
+│   ├── game/                      # Core game logic (~21,400 lines, 43 files)
 │   │   ├── mod.rs                 # Module exports
 │   │   │
 │   │   │ # ─── CORE SYSTEMS (wired up) ───
@@ -292,6 +292,14 @@ keyboard-warrior/
 │   │   ├── voice_system.rs        # ✅ Faction NPC dialogue (794)
 │   │   ├── encounter_writing.rs   # ✅ Authored exploration events (783)
 │   │   ├── run_modifiers.rs       # ✅ Difficulty scaling (632)
+│   │   │
+│   │   │ # ─── IMMERSION OVERHAUL (v0.5.1) ───
+│   │   ├── typing_impact.rs       # ✅ Per-keystroke damage tracking (372)
+│   │   ├── dialogue_engine.rs     # ✅ Context-aware enemy dialogue (384)
+│   │   ├── enemy_visuals.rs       # ✅ Progressive ASCII damage (412)
+│   │   ├── pacing.rs              # ✅ Tension/breather beats (370)
+│   │   ├── player_avatar.rs       # ✅ Player visual presence (381)
+│   │   ├── combat_immersion.rs    # ✅ Unified immersion wrapper (498)
 │   │   │
 │   │   │ # ─── WORLD & LORE (content complete) ───
 │   │   ├── deep_lore.rs           # 🔸 High fantasy cosmology (1,016)
