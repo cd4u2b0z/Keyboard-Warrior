@@ -53,3 +53,11 @@ pub mod meta_progression;
 pub mod help_system;
 pub mod tutorial;
 pub mod world_integration;
+
+// Immersion overhaul systems (v0.6.0)
+pub mod typing_impact;
+pub mod dialogue_engine;
+pub mod enemy_visuals;
+pub mod pacing;
+pub mod player_avatar;
+pub mod combat_immersion;
