@@ -10,7 +10,7 @@
 
 [![Rust](https://img.shields.io/badge/Rust-1.70+-DEA584?style=flat&logo=rust&logoColor=white)](https://www.rust-lang.org/)
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat)](LICENSE)
-[![Version](https://img.shields.io/badge/Version-0.5.1-blue?style=flat)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/Version-0.5.3-blue?style=flat)](CHANGELOG.md)
 [![Status](https://img.shields.io/badge/Status-Active_Development_🔥-orange?style=flat)]()
 [![TUI](https://img.shields.io/badge/TUI-ratatui-purple?style=flat)](https://github.com/ratatui-org/ratatui)
 
@@ -20,7 +20,7 @@
 
 **This is a personal hobby project — a fun "fuck around and find out" experiment in terminal game development.**
 
-### What Actually Works (v0.5.1)
+### What Actually Works (v0.5.3)
 - ✅ Full 10-floor dungeon progression with zone-themed encounters
 - ✅ Combat with typing, combos, and flow states
 - ✅ **Lore-integrated typing** — words match the zone, enemy, and story
@@ -40,9 +40,17 @@
 - ✅ Narrative progression through typed sentences
 - ✅ **EventBus architecture** — systems communicate dynamically
 - ✅ **Immersive combat** — per-keystroke feedback, enemy damage states, player avatars
+- ✅ **Visual effects LIVE** — floating damage numbers, screen shake, hit flash, combos
 
-### Recently Integrated (v0.5.2) 💥
-**Visual Juice System** — Combat now has visual punch:
+### Recently Integrated (v0.5.3) 🔌
+**Effects System Wiring** — Visual juice now actually works:
+- ✅ **Game Loop Integration** — effects update every frame
+- ✅ **Damage Tracking** — accurate damage numbers on hits
+- ✅ **Enhanced Combat Render** — full visual experience active
+- ✅ **Deferred Effects Pattern** — clean Rust borrow checker solution
+
+### Previously Added (v0.5.2) 💥
+**Visual Juice System** — Combat has visual punch:
 - ✅ **Effects System** (400 lines) — floating damage, screen shake, hit flash, combo pulse
 - ✅ **Enhanced Combat Render** (450 lines) — dynamic combat UI with effects overlay
 
@@ -370,38 +378,65 @@ keyboard-warrior/
 - [x] Fix floor progression bugs
 
 ### v0.4.0 — Fantasy Lore Overhaul ✅
-- [x] Rewrite deep_lore.rs with high fantasy cosmology (Three Ages, The Sundering, Malachar)
-- [x] Replace all factions (MagesGuild, TempleOfDawn, RangersOfTheWild, ShadowGuild, MerchantConsortium)
-- [x] Fantasy-themed zones (ShatteredHalls, SunkenArchives, BlightedGardens, ClockworkDepths, VoidsEdge, TheBreach)
-- [x] Replace bosses (The Hollow Knight, The Void Herald)
-- [x] Fantasy enemy names and descriptions (14 enemies)
-- [x] Complete world cosmology with player mystery and multiple endings
+- [x] High fantasy cosmology (Three Ages, The Sundering, Malachar)
+- [x] Five factions with distinct philosophies
+- [x] Fantasy-themed zones (6 unique areas)
+- [x] Bosses with personality (Hollow Knight, Void Herald)
+- [x] 14 thematic enemies with lore
+- [x] Player mystery and multiple endings framework
 
 ### v0.4.1 — Lore-Integrated Typing ✅
-- [x] Zone-specific word pools (30+ words per zone)
-- [x] Zone-specific sentences that tell the story
-- [x] Enemy-type word themes (goblin, undead, spectral, corrupted, mechanical, void)
-- [x] Boss-specific dialogue (Hollow Knight, Void Herald unique lines)
-- [x] Narrative progression (early/mid/late game sentences)
-- [x] Combat system wired to use lore words instead of generic words
+- [x] Zone-specific word pools (30+ per zone)
+- [x] Enemy-type word themes
+- [x] Boss-specific dialogue lines
+- [x] Narrative progression through typed sentences
+- [x] Combat wired to use lore words
 
-### v0.5.0 — Persistence & Polish
+### v0.5.0 — System Integration ✅
+- [x] EventBus architecture (60+ event types)
+- [x] NarrativeSeed corruption effects
+- [x] SkillTree combat integration (5 trees, 25+ skills)
+- [x] VoiceSystem for faction NPCs
+- [x] EncounterWriting authored events
+- [x] RunModifiers difficulty scaling
+
+### v0.5.1 — Immersion Overhaul ✅
+- [x] TypingImpact per-keystroke damage
+- [x] DialogueEngine context-aware taunts
+- [x] EnemyVisuals progressive ASCII damage
+- [x] PacingSystem tension/breather beats
+- [x] PlayerAvatar class-based visuals
+- [x] CombatImmersion unified wrapper
+
+### v0.5.2 — Visual Juice System ✅
+- [x] Effects system (floating damage, screen shake, hit flash)
+- [x] Enhanced combat render (450 lines)
+- [x] Combo pulse animations
+- [x] Typing ripple feedback
+
+### v0.5.3 — Effects Wiring ✅
+- [x] Game loop integration (`update_effects()` every frame)
+- [x] Damage tracking with deferred pattern
+- [x] Switched to `render_combat_enhanced()`
+- [x] All visual effects now actually display
+
+### v0.6.0 — Persistence & Polish (next)
 - [ ] Save/load game state
 - [ ] Ink persistence between runs
 - [ ] Settings/config file
-- [ ] Balance pass
+- [ ] Balance tuning pass
 
-### v0.6.0 — Connect Dormant Systems (aspirational)
-- [ ] Wire up deep lore / lore fragments to gameplay
-- [ ] Wire up voice system for NPCs
-- [ ] Wire up skill trees
-- [ ] Wire up thematic word generation
+### v0.7.0 — Dormant Systems (future)
+- [ ] Wire deep lore / lore fragments to gameplay
+- [ ] Quest system activation
+- [ ] Character relationship tracking
+- [ ] World simulation integration
 
-### v1.0.0 — Probably Never
-- [ ] Balance pass
-- [ ] Multiple endings
-- [ ] Full documentation
-- [ ] Actually finish something for once
+### v1.0.0 — The Dream
+- [ ] Full balance pass
+- [ ] Multiple endings implemented
+- [ ] Documentation complete
+- [ ] Actually ship something
 
 ---
 
