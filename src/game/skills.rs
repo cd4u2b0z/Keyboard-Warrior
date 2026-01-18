@@ -396,6 +396,122 @@ impl SkillTree {
             },
         ]
     }
+    
+    /// Get all active effects from unlocked skills
+    pub fn get_active_effects(&self) -> Vec<SkillEffect> {
+        let mut effects = Vec::new();
+        for skills in self.trees.values() {
+            for skill in skills {
+                if self.has_skill(&skill.id) {
+                    effects.extend(skill.effects.clone());
+                }
+            }
+        }
+        effects
+    }
+    
+    /// Calculate total damage multiplier from skills
+    pub fn get_damage_multiplier(&self, wpm: f32, accuracy: f32, time_remaining: f32) -> f32 {
+        let mut mult = 1.0;
+        for effect in self.get_active_effects() {
+            match effect {
+                SkillEffect::WPMDamageMultiplier(bonus) => {
+                    mult += (wpm / 30.0) * bonus; // More WPM = more bonus
+                }
+                SkillEffect::PerfectWordDamageBonus(bonus) if accuracy >= 1.0 => {
+                    mult += bonus;
+                }
+                SkillEffect::PressureDamageBonus(threshold, bonus) if time_remaining <= threshold => {
+                    mult += bonus;
+                }
+                SkillEffect::VelocityStacking(threshold, bonus) if wpm >= threshold => {
+                    mult += bonus; // Stacks per word handled elsewhere
+                }
+                _ => {}
+            }
+        }
+        mult
+    }
+    
+    /// Calculate crit chance from skills (0.0 to 1.0)
+    pub fn get_crit_chance(&self) -> f32 {
+        let mut chance = 0.0;
+        for effect in self.get_active_effects() {
+            if let SkillEffect::CritChance(c) = effect {
+                chance += c;
+            }
+        }
+        chance.min(1.0)
+    }
+    
+    /// Calculate crit damage multiplier from skills
+    pub fn get_crit_multiplier(&self) -> f32 {
+        let mut mult = 1.5; // Base crit is 1.5x
+        for effect in self.get_active_effects() {
+            if let SkillEffect::CritDamage(m) = effect {
+                mult = m; // Override with skill value
+            }
+        }
+        mult
+    }
+    
+    /// Calculate damage reduction from skills (0.0 to 1.0)
+    pub fn get_damage_reduction(&self) -> f32 {
+        let mut reduction = 0.0;
+        for effect in self.get_active_effects() {
+            match effect {
+                SkillEffect::DamageReduction(r) => reduction += r,
+                SkillEffect::EnemyDamageReduction(r) => reduction += r,
+                _ => {}
+            }
+        }
+        reduction.min(0.75) // Cap at 75% reduction
+    }
+    
+    /// Calculate evasion chance from skills (0.0 to 1.0)
+    pub fn get_evasion_chance(&self) -> f32 {
+        let mut chance = 0.0;
+        for effect in self.get_active_effects() {
+            if let SkillEffect::EvasionChance(c) = effect {
+                chance += c;
+            }
+        }
+        chance.min(0.50) // Cap at 50% evasion
+    }
+    
+    /// Check if transcendence is available at given WPM
+    pub fn is_transcendent(&self, wpm: f32) -> bool {
+        for effect in self.get_active_effects() {
+            if let SkillEffect::Transcendence(threshold) = effect {
+                if wpm >= threshold {
+                    return true;
+                }
+            }
+        }
+        false
+    }
+    
+    /// Get max HP bonus multiplier (1.0 = base)
+    pub fn get_max_hp_multiplier(&self) -> f32 {
+        let mut mult = 1.0;
+        for effect in self.get_active_effects() {
+            if let SkillEffect::MaxHPBonus(bonus) = effect {
+                mult += bonus;
+            }
+        }
+        mult
+    }
+    
+    /// Get XP bonus multiplier (1.0 = base)
+    pub fn get_xp_multiplier(&self) -> f32 {
+        let mut mult = 1.0;
+        for effect in self.get_active_effects() {
+            if let SkillEffect::XPBonus(bonus) = effect {
+                mult += bonus;
+            }
+        }
+        mult
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]

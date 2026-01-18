@@ -4,6 +4,7 @@ use std::time::{Duration, Instant};
 use std::sync::Arc;
 use super::{player::Player, enemy::Enemy, spells::Spell};
 use super::narrative_seed::TypingModifier;
+use super::skills::SkillTree;
 use crate::data::GameData;
 use rand::Rng;
 
@@ -41,6 +42,13 @@ pub struct CombatState {
     pub corruption_modifier: Option<TypingModifier>,
     /// Damage from corruption mistakes this combat
     pub corruption_damage_taken: i32,
+    /// Skill-based modifiers computed at combat start
+    pub skill_damage_mult: f32,
+    pub skill_crit_chance: f32,
+    pub skill_crit_mult: f32,
+    pub skill_damage_reduction: f32,
+    pub skill_evasion_chance: f32,
+    pub skill_transcendence_threshold: Option<f32>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -68,7 +76,7 @@ pub struct CombatResult {
 }
 
 impl CombatState {
-    pub fn new(enemy: Enemy, game_data: Arc<GameData>, difficulty: u32, floor: u32, corruption: Option<TypingModifier>) -> Self {
+    pub fn new(enemy: Enemy, game_data: Arc<GameData>, difficulty: u32, floor: u32, corruption: Option<TypingModifier>, skills: Option<&SkillTree>) -> Self {
         // Use sentences for bosses or high difficulty, otherwise words
         let use_sentences = enemy.is_boss || difficulty >= 5;
         let starting_word = if use_sentences {
@@ -112,8 +120,17 @@ impl CombatState {
             spell_incantation: None,
             corruption_modifier: corruption,
             corruption_damage_taken: 0,
+            // Skill modifiers from SkillTree
+            skill_damage_mult: skills.map(|s| s.get_damage_multiplier(0.0, 1.0, 10.0)).unwrap_or(1.0),
+            skill_crit_chance: skills.map(|s| s.get_crit_chance()).unwrap_or(0.0),
+            skill_crit_mult: skills.map(|s| s.get_crit_multiplier()).unwrap_or(1.5),
+            skill_damage_reduction: skills.map(|s| s.get_damage_reduction()).unwrap_or(0.0),
+            skill_evasion_chance: skills.map(|s| s.get_evasion_chance()).unwrap_or(0.0),
+            skill_transcendence_threshold: skills.and_then(|s| s.get_active_effects().iter().find_map(|e| match e { super::skills::SkillEffect::Transcendence(t) => Some(*t), _ => None })),
         }
+
     }
+
 
     pub fn start_turn(&mut self, word_pool: &[String]) {
         self.phase = CombatPhase::PlayerTurn;
@@ -124,16 +141,19 @@ impl CombatState {
         self.typing_started = false;
     }
 
+
     fn select_word(&self, word_pool: &[String]) -> String {
         let mut rng = rand::thread_rng();
         let index = rng.gen_range(0..word_pool.len());
         word_pool[index].clone()
     }
 
+
     pub fn tick(&mut self) {
         if self.phase != CombatPhase::PlayerTurn {
             return;
         }
+
         
         let now = Instant::now();
         let elapsed = now.duration_since(self.last_tick);
@@ -146,18 +166,23 @@ impl CombatState {
                 self.time_remaining = 0.0;
                 self.on_word_timeout();
             }
+
         }
+
     }
+
 
     pub fn on_char_typed(&mut self, c: char) {
         if self.phase != CombatPhase::PlayerTurn {
             return;
         }
 
+
         if !self.typing_started {
             self.typing_started = true;
             self.last_tick = Instant::now();
         }
+
 
         self.typed_input.push(c);
         self.total_chars += 1;
@@ -171,20 +196,26 @@ impl CombatState {
                 self.corruption_damage_taken += damage_per_error;
                 self.battle_log.push(format!("Corruption punishes your error! (-{} HP)", damage_per_error));
             }
+
         }
+
 
         // Check if word is complete
         if self.typed_input.len() >= self.current_word.len() {
             self.on_word_complete();
         }
+
     }
+
 
     pub fn on_backspace(&mut self) {
         if self.phase != CombatPhase::PlayerTurn {
             return;
         }
+
         self.typed_input.pop();
     }
+
 
     fn on_word_complete(&mut self) {
         self.words_typed += 1;
@@ -195,6 +226,7 @@ impl CombatState {
             if self.combo > self.max_combo {
                 self.max_combo = self.combo;
             }
+
             
             // Calculate damage based on typing performance
             let wpm = self.calculate_wpm();
@@ -215,6 +247,7 @@ impl CombatState {
             } else {
                 self.phase = CombatPhase::EnemyTurn;
             }
+
         } else {
             self.combo = 0;
             self.battle_log.push(format!(
@@ -223,7 +256,9 @@ impl CombatState {
             ));
             self.phase = CombatPhase::EnemyTurn;
         }
+
     }
+
 
     fn on_word_timeout(&mut self) {
         self.words_typed += 1;
@@ -235,14 +270,38 @@ impl CombatState {
         self.phase = CombatPhase::EnemyTurn;
     }
 
+
     pub fn execute_enemy_turn(&mut self, player: &mut Player) {
         if self.phase != CombatPhase::EnemyTurn {
             return;
         }
 
+
         let raw_damage = self.enemy.attack_power;
         let defense_reduction = (player.stats.vitality as f32 * 0.5).floor() as i32;
         let damage = (raw_damage - defense_reduction).max(1);
+        
+        // Skill: Evasion check (Shadow tree)
+        let mut rng = rand::thread_rng();
+        if rng.gen::<f32>() < self.skill_evasion_chance {
+            self.battle_log.push("✨ You dodge the attack!".to_string());
+            self.turn += 1;
+            self.current_word = if self.use_sentences {
+                self.game_data.get_lore_sentence(self.floor, self.enemy.is_boss, Some(&self.enemy.name))
+            } else {
+                self.game_data.get_lore_word(self.floor, Some(&self.enemy.typing_theme))
+            };
+            self.typed_input.clear();
+            self.time_remaining = self.time_limit;
+            self.last_tick = Instant::now();
+            self.typing_started = false;
+            self.phase = CombatPhase::PlayerTurn;
+            return;
+        }
+        
+        // Apply skill damage reduction (Endurance/Shadow trees)
+        let damage = ((damage as f32) * (1.0 - self.skill_damage_reduction)).round() as i32;
+        
         let actual_damage = if self.player_shield > 0 {
             let absorbed = damage.min(self.player_shield);
             self.player_shield -= absorbed;
@@ -285,27 +344,34 @@ impl CombatState {
             self.typing_started = false;
             self.phase = CombatPhase::PlayerTurn;
         }
+
     }
+
 
     fn calculate_wpm(&self) -> f32 {
         if self.time_remaining >= self.time_limit {
             return 0.0;
         }
+
         let time_taken = self.time_limit - self.time_remaining;
         if time_taken <= 0.0 {
             return 0.0;
         }
+
         let words = self.current_word.len() as f32 / 5.0;
         let minutes = time_taken / 60.0;
         words / minutes
     }
 
+
     fn calculate_accuracy(&self) -> f32 {
         if self.total_chars == 0 {
             return 1.0;
         }
+
         self.correct_chars as f32 / self.total_chars as f32
     }
+
 
     fn calculate_damage(&self, wpm: f32, accuracy: f32) -> i32 {
         let base_damage = 10;
@@ -320,7 +386,28 @@ impl CombatState {
         // Max 3x damage at 20 combo
         let combo_mult = 1.0 + (self.combo as f32 * 0.1).min(2.0);
         
-        let damage = (base_damage + wpm_bonus) as f32 * accuracy_mult * combo_mult;
+        // Skill-based damage multiplier (from Precision/Speed trees)
+        let skill_mult = self.skill_damage_mult;
+        
+        // Transcendence check: at high WPM, all damage doubled
+        let transcendence_mult = match self.skill_transcendence_threshold {
+            Some(threshold) if wpm >= threshold => 2.0,
+            _ => 1.0,
+        };
+        
+        let mut damage = (base_damage + wpm_bonus) as f32 
+            * accuracy_mult 
+            * combo_mult 
+            * skill_mult
+            * transcendence_mult;
+        
+        // Critical hit check (from Shadow tree)
+        let mut rng = rand::thread_rng();
+        if rng.gen::<f32>() < self.skill_crit_chance {
+            damage *= self.skill_crit_mult;
+        }
+
+        
         damage.round() as i32
     }
 
@@ -329,6 +416,7 @@ impl CombatState {
             self.battle_log.push("Cannot flee from a boss!".to_string());
             return false;
         }
+
         
         let mut rng = rand::thread_rng();
         let flee_chance = 0.5; // 50% base flee chance
@@ -342,7 +430,9 @@ impl CombatState {
             self.phase = CombatPhase::EnemyTurn;
             false
         }
+
     }
+
 
     pub fn try_spare(&mut self) -> bool {
         // Undertale-style spare: can only spare when conditions are met
@@ -350,12 +440,14 @@ impl CombatState {
             self.battle_log.push("The enemy isn't ready to be spared...".to_string());
             return false;
         }
+
         
         // Spare successful!
         self.phase = CombatPhase::Spared;
         self.finalize_result(true, false, true);
         true
     }
+
 
     fn finalize_result(&mut self, victory: bool, fled: bool, spared: bool) {
         let xp = if victory && !spared {
@@ -391,12 +483,15 @@ impl CombatState {
         });
     }
 
+
     pub fn get_accuracy(&self) -> f32 {
         if self.words_typed == 0 {
             return 100.0;
         }
+
         (self.words_correct as f32 / self.words_typed as f32) * 100.0
     }
+
 }
 
 /// Word pools for different difficulty levels
@@ -453,6 +548,7 @@ pub fn get_word_pool(difficulty: i32) -> Vec<String> {
             "typescript", "validation", "virtualization", "webpack",
         ].into_iter().map(String::from).collect(),
     }
+
 }
 
 // Spell casting extensions for CombatState
@@ -464,8 +560,10 @@ impl CombatState {
             self.selected_spell = None;
             self.spell_incantation = None;
         }
+
         self.typed_input.clear();
     }
+
 
     /// Select a spell by index and prepare to cast it
     pub fn select_spell(&mut self, spell: &super::spells::Spell) {
@@ -478,6 +576,7 @@ impl CombatState {
         self.battle_log.push(format!("Casting {}... Type: {}", spell.name, spell.incantation));
     }
 
+
     /// Called when spell incantation is typed correctly
     pub fn cast_spell(&mut self, spell: &super::spells::Spell, player: &mut super::player::Player) -> bool {
         if player.mp < spell.mp_cost {
@@ -485,6 +584,7 @@ impl CombatState {
             self.toggle_spell_mode();
             return false;
         }
+
 
         player.mp -= spell.mp_cost;
         
@@ -494,15 +594,18 @@ impl CombatState {
                 self.enemy.current_hp -= damage;
                 self.battle_log.push(format!("✦ {} deals {} damage!", spell.name, damage));
             }
+
             super::spells::SpellEffect::Heal(heal) => {
                 let amount = (*heal as f32 * (1.0 + player.stats.intellect as f32 * 0.03)) as i32;
                 player.heal(amount);
                 self.battle_log.push(format!("✦ {} restores {} HP!", spell.name, amount));
             }
+
             super::spells::SpellEffect::Shield(shield) => {
                 self.player_shield += shield;
                 self.battle_log.push(format!("✦ {} grants {} shield!", spell.name, shield));
             }
+
             super::spells::SpellEffect::Drain { damage, heal_percent } => {
                 let dmg = (*damage as f32 * (1.0 + player.stats.intellect as f32 * 0.05)) as i32;
                 self.enemy.current_hp -= dmg;
@@ -510,6 +613,7 @@ impl CombatState {
                 player.heal(heal);
                 self.battle_log.push(format!("✦ {} drains {} life!", spell.name, dmg));
             }
+
             super::spells::SpellEffect::Multi { hits, damage_per_hit } => {
                 let mut total = 0;
                 for _ in 0..*hits {
@@ -517,12 +621,16 @@ impl CombatState {
                     self.enemy.current_hp -= dmg;
                     total += dmg;
                 }
+
                 self.battle_log.push(format!("✦ {} hits {} times for {} total!", spell.name, hits, total));
             }
+
             _ => {
                 self.battle_log.push(format!("✦ Cast {}!", spell.name));
             }
+
         }
+
 
         // Exit spell mode
         self.toggle_spell_mode();
@@ -531,7 +639,9 @@ impl CombatState {
         if self.enemy.current_hp <= 0 {
             self.phase = CombatPhase::Victory;
         }
+
         
         true
     }
+
 }

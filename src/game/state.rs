@@ -195,7 +195,7 @@ impl GameState {
         
         self.current_enemy = Some(enemy.clone());
         let difficulty = self.dungeon.as_ref().map(|d| d.current_floor as u32).unwrap_or(1);
-        self.combat_state = Some(CombatState::new(enemy, self.game_data.clone(), difficulty, difficulty, self.active_typing_modifier.clone()));
+        self.combat_state = Some(CombatState::new(enemy, self.game_data.clone(), difficulty, difficulty, self.active_typing_modifier.clone(), Some(&self.skill_tree)));
         self.scene = Scene::Combat;
         
         self.add_message(&format!("{} appears!", enemy_name));
@@ -211,7 +211,7 @@ impl GameState {
         if victory {
             if let Some(enemy) = &self.current_enemy {
                 let enemy_name = enemy.name.clone();
-                let xp_reward = enemy.xp_reward as u64;
+                let xp_reward = ((enemy.xp_reward as f32) * self.skill_tree.get_xp_multiplier()).round() as u64;
                 let gold_reward = enemy.gold_reward as u64;
                 let is_boss = enemy.is_boss;
                 
