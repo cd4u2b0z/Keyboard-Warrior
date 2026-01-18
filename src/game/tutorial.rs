@@ -586,7 +586,7 @@ impl TutorialProgress {
     /// Load progress from save file
     pub fn load() -> Self {
         let save_path = dirs::config_dir()
-            .map(|p| p.join("typingquest").join("tutorial.json"))
+            .map(|p| p.join("keyboard-warrior").join("tutorial.json"))
             .unwrap_or_else(|| PathBuf::from("tutorial.json"));
         
         if save_path.exists() {
@@ -603,7 +603,7 @@ impl TutorialProgress {
     /// Save progress to file
     pub fn save(&self) {
         let save_path = dirs::config_dir()
-            .map(|p| p.join("typingquest").join("tutorial.json"))
+            .map(|p| p.join("keyboard-warrior").join("tutorial.json"))
             .unwrap_or_else(|| PathBuf::from("tutorial.json"));
         
         if let Some(parent) = save_path.parent() {

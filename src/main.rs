@@ -1,4 +1,4 @@
-//! TypingQuest - A Roguelike Typing Adventure
+//! Keyboard Warrior - A Roguelike Typing Adventure
 //! 
 //! Inspired by ttyper, Undertale, Earthbound, and Balatro
 //!

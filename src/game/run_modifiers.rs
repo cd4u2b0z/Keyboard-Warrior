@@ -501,7 +501,7 @@ impl RunType {
     
     pub fn description(&self) -> &str {
         match self {
-            Self::Standard => "A normal run through the world of TypingQuest.",
+            Self::Standard => "A normal run through the world of Keyboard Warrior.",
             Self::SpeedRun => "Complete the run within the time limit.",
             Self::Pacifist => "Complete the run without killing anyone.",
             Self::NoDamage => "Complete the run without taking any damage.",

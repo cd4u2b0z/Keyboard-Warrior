@@ -2,7 +2,7 @@
 #![allow(dead_code, unused_imports, unused_variables)]
 //! Game logic modules - Deep RPG system with narrative coherence
 //!
-//! Core systems for TypingQuest - a typing-based roguelike RPG
+//! Core systems for Keyboard Warrior - a typing-based roguelike RPG
 
 // Core game state
 pub mod state;

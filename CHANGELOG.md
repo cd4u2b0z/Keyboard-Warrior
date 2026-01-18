@@ -1,6 +1,6 @@
 ## Changelog
 
-All notable changes to TypingQuest will be documented in this file.
+All notable changes to Keyboard Warrior will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -279,6 +279,6 @@ Current status: **Pre-release** (0.x.x) — Core systems functional, content and
 
 ## Links
 
-- [Repository](https://github.com/cd4u2b0z/typingquest)
+- [Repository](https://github.com/cd4u2b0z/keyboard-warrior)
 - [README](README.md)
 - [License](LICENSE)

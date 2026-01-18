@@ -146,9 +146,9 @@ impl From<io::Error> for SaveError {
 pub fn get_save_dir() -> PathBuf {
     // Try XDG data directory first, then fallback
     if let Ok(data_dir) = std::env::var("XDG_DATA_HOME") {
-        PathBuf::from(data_dir).join("typingquest")
+        PathBuf::from(data_dir).join("keyboard-warrior")
     } else if let Ok(home) = std::env::var("HOME") {
-        PathBuf::from(home).join(".local/share/typingquest")
+        PathBuf::from(home).join(".local/share/keyboard-warrior")
     } else {
         PathBuf::from("./saves")
     }

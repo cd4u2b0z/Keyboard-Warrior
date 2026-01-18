@@ -1,9 +1,11 @@
-# 󰓥 TypingQuest
+# ⌨️ Keyboard Warrior
 
-**A roguelike typing RPG for the terminal — defeat enemies through the rhythm of your keystrokes.**
+**Finally, a reason to be one.**
+
+*A high-fantasy roguelike where you defeat ancient evils through the rhythm of your keystrokes. Descend into the ruins of a shattered kingdom. Face corrupted knights, void walkers, and eldritch horrors. Type to survive. Die repeatedly.*
 
 <p align="center">
-  <img src="demo.gif" alt="TypingQuest Demo" width="800">
+  <img src="demo.gif" alt="Keyboard Warrior Demo" width="800">
 </p>
 
 [![Rust](https://img.shields.io/badge/Rust-1.70+-DEA584?style=flat&logo=rust&logoColor=white)](https://www.rust-lang.org/)
@@ -18,9 +20,9 @@
 
 **This is a personal hobby project — a fun "fuck around and find out" experiment in terminal game development.**
 
-It currently exists in a *largely disconnected state*. There's ~23,000 lines of code across 37 modules, but honestly? About 60% of that is dormant scaffolding waiting to be wired up. The vision is grand. The reality is messier.
+It currently exists in a *largely disconnected state*. There's ~24,000 lines of code across 48 modules, but honestly? About 40% of that is dormant scaffolding waiting to be wired up. The vision is grand. The reality is messier.
 
-### What Actually Works (v0.3.0)
+### What Actually Works (v0.4.0)
 - ✅ Full 10-floor dungeon progression
 - ✅ Combat with typing, combos, and flow states
 - ✅ 5 playable classes with distinct stats
@@ -52,15 +54,52 @@ These systems have been written with full high-fantasy lore but aren't connected
 - 🐛 Item effects are minimal
 - 🐛 The game "ending" is pretty anticlimactic
 
-This is a learning project. It compiles. It runs. It's fun to hack on. Don't expect polish.
+This is a learning project. It compiles. It runs. It's fun to hack on. Don't expect polish. Expect to die.
+
+---
+
+## 🏰 World & Lore
+
+*"Wait, there's actual lore?" — Yes. Thousands of lines of it. Most of it unused.*
+
+Keyboard Warrior is set in a dark fantasy world recovering from **The Sundering** — a cataclysm caused when Archon Malachar tried to pierce the Veil between worlds and become a god.
+
+### The Three Ages
+| Age | Era | What Happened |
+|-----|-----|---------------|
+| **Age of Dawn** | Before time | Gods walked among mortals. Dragons spoke prophecy. |
+| **Age of Crowns** | 3,000 years | Mortal kingdoms rose. The great Orders were founded. |
+| **Age of Shadow** | Now (47 years) | The Sundering tore reality. The Blight spreads. |
+
+### The Five Factions
+| Faction | Philosophy |
+|---------|------------|
+| 🔮 **Mages Guild** | Arcane knowledge is the key to sealing the breach |
+| ☀️ **Temple of Dawn** | Divine light will purge the corruption |
+| 🌲 **Rangers of the Wild** | Nature's balance must be restored |
+| 🗡️ **Shadow Guild** | Information is power; secrets are currency |
+| 💰 **Merchant Consortium** | Trade continues; neutrality profits |
+
+### The Dungeon Zones
+- **Floors 1-2:** The Shattered Halls — ruined castle, echoes of the old kingdom
+- **Floors 3-4:** The Sunken Archives — flooded library, forbidden knowledge
+- **Floors 5-6:** The Blighted Gardens — corrupted greenhouse, twisted nature
+- **Floors 7-8:** The Clockwork Depths — ancient machinery, dwarven ruins
+- **Floors 9-10:** The Void's Edge — reality breaks down, glimpses of the beyond
+- **Floor 11+:** The Breach — where The Sundering occurred
+
+### The Mystery
+*You are not who you think you are.* As you descend, fragments of memory surface. The truth waits at the bottom — and three possible endings: **Final Rest**, **Dark Ascension**, or **The Third Path**.
 
 ---
 
 ## Vision
 
-TypingQuest is a typing game that *feels* like an RPG. Every keystroke has weight. Combos build momentum. Flow states reward consistency. The dungeon unfolds through your fingers.
+Keyboard Warrior is a typing game that *feels* like an RPG. Every keystroke has weight. Combos build momentum. Flow states reward consistency. The dungeon unfolds through your fingers.
 
-Inspired by [ttyper](https://github.com/max-niederman/ttyper), *Undertale*, *Balatro*, and *Hades*.
+It's also a pun. You're literally a warrior. With a keyboard. Fighting things. In a terminal. Look, the name was available.
+
+Inspired by [ttyper](https://github.com/max-niederman/ttyper), *Undertale*, *Balatro*, *Hades*, and *Dark Souls*.
 
 ---
 
@@ -68,12 +107,12 @@ Inspired by [ttyper](https://github.com/max-niederman/ttyper), *Undertale*, *Bal
 
 ```bash
 # Clone and build
-git clone https://github.com/cd4u2b0z/typingquest.git
-cd typingquest
+git clone https://github.com/cd4u2b0z/keyboard-warrior.git
+cd keyboard-warrior
 cargo build --release
 
 # Run the game
-./target/release/typingquest
+./target/release/keyboard-warrior
 ```
 
 **Requirements:**
@@ -156,7 +195,7 @@ Each floor contains rooms: combat encounters, elite enemies, shops, rest sites, 
 
 ## Features
 
-### Working (v0.3.0)
+### Working (v0.4.0)
 
 **Core Gameplay**
 - 5 playable classes with distinct stats
@@ -196,7 +235,7 @@ See [Project Status](#️-project-status) for the full breakdown.
 ## Project Structure
 
 ```
-typingquest/
+keyboard-warrior/
 ├── src/
 │   ├── main.rs                    # Game loop, input handling (820 lines)
 │   │
@@ -283,19 +322,21 @@ typingquest/
 - [x] Meta-progression: Ink earned on death
 - [x] Fix floor progression bugs
 
-### v0.4.0 — Persistence (someday)
-- [ ] Save/load game state
-- [ ] Ink persistence between runs
-- [ ] Settings/config file
-
-### v0.4.1 — Lore Overhaul ✅
+### v0.4.0 — Fantasy Lore Overhaul ✅
 - [x] Rewrite deep_lore.rs with high fantasy cosmology (Three Ages, The Sundering, Malachar)
 - [x] Replace all factions (MagesGuild, TempleOfDawn, RangersOfTheWild, ShadowGuild, MerchantConsortium)
 - [x] Fantasy-themed zones (ShatteredHalls, SunkenArchives, BlightedGardens, ClockworkDepths, VoidsEdge, TheBreach)
 - [x] Replace bosses (The Hollow Knight, The Void Herald)
-- [x] Fantasy enemy names and descriptions
+- [x] Fantasy enemy names and descriptions (14 enemies)
+- [x] Complete world cosmology with player mystery and multiple endings
 
-### v0.5.0 — Connect Dormant Systems (aspirational)
+### v0.5.0 — Persistence & Polish
+- [ ] Save/load game state
+- [ ] Ink persistence between runs
+- [ ] Settings/config file
+- [ ] Balance pass
+
+### v0.6.0 — Connect Dormant Systems (aspirational)
 - [ ] Wire up deep lore / lore fragments to gameplay
 - [ ] Wire up voice system for NPCs
 - [ ] Wire up skill trees
@@ -329,9 +370,9 @@ cargo check
 
 ## Contributing
 
-TypingQuest is a personal hobby project. It's not looking for contributors, but if you want to fork it and do something cool, go for it.
+Keyboard Warrior is a personal hobby project. It's not looking for contributors, but if you want to fork it and do something cool, go for it.
 
-If you find a bug that's actually blocking gameplay (not just "this system isn't wired up"), feel free to open an issue.
+If you find a bug that's actually blocking gameplay (not just "this system isn't wired up"), feel free to open an issue. I might even fix it.
 
 ---
 
@@ -339,11 +380,15 @@ If you find a bug that's actually blocking gameplay (not just "this system isn't
 
 MIT License. See [LICENSE](LICENSE) for details.
 
+Do whatever you want with this code. I'm not your mom.
+
 ---
 
 ## Credits
 
-**TypingQuest** — Original work by Dr. Baklava
+**Keyboard Warrior** — Original work by Dr. Baklava
+
+*"I spent hundreds of hours on this so you can type 'ancient prophecy' at a Goblin."*
 
 Built with:
 - [ratatui](https://github.com/ratatui-org/ratatui) — Terminal UI framework
@@ -355,7 +400,8 @@ Inspired by:
 - *Undertale* — Personality and charm
 - *Hades* — Meta-progression
 - *Balatro* — Satisfying feedback
+- *Dark Souls* — The joy of repeated death
 
 ---
 
-*󰩛 Dr. Baklava was here*
+*⌨️ Type well, die often.*

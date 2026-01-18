@@ -1,14 +1,14 @@
 [package]
-name = "typingquest"
+name = "keyboard-warrior"
 version = "0.4.0"
 edition = "2021"
 authors = ["Dr. Baklava"]
-description = "A narrative roguelike typing RPG - discover ancient mysteries through the rhythm of your keystrokes"
+description = "Finally, a reason to be a keyboard warrior. A high-fantasy typing roguelike for the terminal."
 readme = "README.md"
 license = "MIT"
 keywords = ["typing", "game", "rpg", "roguelike", "tui"]
 categories = ["games", "command-line-utilities"]
-repository = "https://github.com/cd4u2b0z/typingquest"
+repository = "https://github.com/cd4u2b0z/keyboard-warrior"
 
 [dependencies]
 # TUI framework

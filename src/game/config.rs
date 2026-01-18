@@ -357,9 +357,9 @@ impl Default for AudioConfig {
 /// Get the config directory path
 pub fn get_config_dir() -> PathBuf {
     if let Ok(config_dir) = std::env::var("XDG_CONFIG_HOME") {
-        PathBuf::from(config_dir).join("typingquest")
+        PathBuf::from(config_dir).join("keyboard-warrior")
     } else if let Ok(home) = std::env::var("HOME") {
-        PathBuf::from(home).join(".config/typingquest")
+        PathBuf::from(home).join(".config/keyboard-warrior")
     } else {
         PathBuf::from("./config")
     }

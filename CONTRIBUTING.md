@@ -1,10 +1,10 @@
-# Contributing to TypingQuest
+# Contributing to Keyboard Warrior
 
-Thank you for your interest in contributing to TypingQuest!
+Thank you for your interest in contributing to Keyboard Warrior!
 
 ## Current Status
 
-TypingQuest is a personal project in active development. While I welcome feedback and suggestions, please understand that contributions may not always be accepted if they don't align with the project's direction.
+Keyboard Warrior is a personal project in active development. While I welcome feedback and suggestions, please understand that contributions may not always be accepted if they don't align with the project's direction.
 
 ## Ways to Contribute
 
@@ -50,4 +50,4 @@ Open an issue with the `question` label.
 
 ---
 
-Thanks for helping make TypingQuest better!
+Thanks for helping make Keyboard Warrior better!
