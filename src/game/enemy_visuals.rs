@@ -283,6 +283,24 @@ impl EnemyVisualState {
         art
     }
     
+
+
+    /// Render current visual state without caching (read-only version)
+    pub fn render_readonly(&self) -> Vec<String> {
+        let mut art = self.base_art.clone();
+        
+        // Apply posture shift
+        art = match self.posture {
+            EnemyPosture::Confident => art,
+            EnemyPosture::Wary => art.iter().map(|l| format!(" {}", l.trim_end())).collect(),
+            EnemyPosture::Staggered => art.iter().map(|l| format!("  {}", l.trim_end())).collect(),
+            EnemyPosture::Wounded => art.iter().map(|l| format!("   {}", l.trim_end())).collect(),
+            EnemyPosture::Dying => art.iter().map(|l| l.to_lowercase()).collect(),
+        };
+        
+        art
+    }
+
     /// Get character at position
     fn char_at(&self, art: &[String], pos: (usize, usize)) -> Option<char> {
         art.get(pos.0).and_then(|row| row.chars().nth(pos.1))

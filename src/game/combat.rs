@@ -7,6 +7,8 @@ use super::narrative_seed::TypingModifier;
 use super::skills::SkillTree;
 use crate::data::GameData;
 use rand::Rng;
+use super::combat_immersion::{ImmersiveCombat, KeystrokeFeedback, WordFeedback, CombatMessage};
+use super::player_avatar::PlayerClass;
 
 #[derive(Debug, Clone)]
 pub struct CombatState {
@@ -49,6 +51,8 @@ pub struct CombatState {
     pub skill_damage_reduction: f32,
     pub skill_evasion_chance: f32,
     pub skill_transcendence_threshold: Option<f32>,
+    /// Immersive combat feedback system (optional)
+    pub immersive: Option<ImmersiveCombat>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -127,6 +131,7 @@ impl CombatState {
             skill_damage_reduction: skills.map(|s| s.get_damage_reduction()).unwrap_or(0.0),
             skill_evasion_chance: skills.map(|s| s.get_evasion_chance()).unwrap_or(0.0),
             skill_transcendence_threshold: skills.and_then(|s| s.get_active_effects().iter().find_map(|e| match e { super::skills::SkillEffect::Transcendence(t) => Some(*t), _ => None })),
+            immersive: None,
         }
 
     }
@@ -644,4 +649,114 @@ impl CombatState {
         true
     }
 
+}
+
+// Immersion system integration
+impl CombatState {
+    /// Initialize immersive combat feedback system
+    /// Call this after creating CombatState when you have player info
+    pub fn init_immersion(&mut self, player_class: &super::player::Class) {
+        use super::combat_immersion::infer_enemy_theme;
+        
+        let pc = match player_class {
+            super::player::Class::Wordsmith => PlayerClass::Wordsmith,
+            super::player::Class::Scribe => PlayerClass::Chronicler,
+            super::player::Class::Spellweaver => PlayerClass::Codebreaker,
+            super::player::Class::Barbarian => PlayerClass::Wordsmith,
+            super::player::Class::Trickster => PlayerClass::Freelancer,
+        };
+        
+        let theme = infer_enemy_theme(&self.enemy.name);
+        
+        self.immersive = Some(ImmersiveCombat::new(
+            self.enemy.name.clone(),
+            theme,
+            self.floor,
+            self.enemy.is_boss,
+            pc,
+        ));
+        
+        // Set actual enemy art
+        if let Some(ref mut imm) = self.immersive {
+            imm.set_enemy_art(
+                self.enemy.ascii_art
+                    .lines()
+                    .map(|s| s.to_string())
+                    .collect()
+            );
+            // Initialize with current word
+            imm.start_word(&self.current_word);
+        }
+    }
+    
+    /// Get immersive keystroke feedback for a character
+    /// Returns feedback if immersion is active
+    pub fn immersive_keystroke(&mut self, c: char, correct: bool) -> Option<KeystrokeFeedback> {
+        if let Some(ref mut imm) = self.immersive {
+            Some(imm.on_keystroke(c, correct))
+        } else {
+            None
+        }
+    }
+    
+    /// Get immersive word completion feedback
+    /// Returns feedback if immersion is active
+    pub fn immersive_word_complete(&mut self, base_damage: i32) -> Option<WordFeedback> {
+        let hp_pct = ((self.enemy.current_hp as f32 / self.enemy.max_hp as f32) * 100.0) as i32;
+        if let Some(ref mut imm) = self.immersive {
+            Some(imm.on_word_complete(hp_pct, base_damage))
+        } else {
+            None
+        }
+    }
+    
+    /// Prepare immersion for a new word
+    pub fn immersive_new_word(&mut self) {
+        if let Some(ref mut imm) = self.immersive {
+            imm.start_word(&self.current_word);
+        }
+    }
+    
+    /// Update immersion system (call each frame)
+    pub fn immersive_update(&mut self, dt_ms: u32) {
+        if let Some(ref mut imm) = self.immersive {
+            imm.update(dt_ms);
+        }
+    }
+    
+    /// Get pending immersive combat messages
+    pub fn pop_immersive_message(&mut self) -> Option<CombatMessage> {
+        if let Some(ref mut imm) = self.immersive {
+            imm.pop_message()
+        } else {
+            None
+        }
+    }
+    
+    /// Render immersive enemy (returns styled lines)
+    pub fn render_immersive_enemy(&mut self) -> Option<Vec<String>> {
+        if let Some(ref mut imm) = self.immersive {
+            Some(imm.render_enemy())
+        } else {
+            None
+        }
+    }
+    
+    /// Render immersive enemy without caching (for read-only rendering)
+    pub fn render_immersive_enemy_readonly(&self) -> Option<Vec<String>> {
+        if let Some(ref imm) = self.immersive {
+            Some(imm.render_enemy_readonly())
+        } else {
+            None
+        }
+    }
+    
+    /// Render immersive player (returns styled lines)  
+    pub fn render_immersive_player(&self) -> Option<Vec<&'static str>> {
+        if let Some(ref imm) = self.immersive {
+            Some(imm.render_player())
+        } else {
+            None
+        }
+    }
 }

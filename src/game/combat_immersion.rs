@@ -310,6 +310,11 @@ impl ImmersiveCombat {
         self.enemy_visuals.render()
     }
     
+    /// Get enemy art without caching (for read-only rendering)
+    pub fn render_enemy_readonly(&self) -> Vec<String> {
+        self.enemy_visuals.render_readonly()
+    }
+    
     /// Get player avatar art
     pub fn render_player(&self) -> Vec<&'static str> {
         self.player.get_art()
