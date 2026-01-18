@@ -41,8 +41,13 @@
 - ✅ **EventBus architecture** — systems communicate dynamically
 - ✅ **Immersive combat** — per-keystroke feedback, enemy damage states, player avatars
 
-### Recently Integrated (v0.5.1) 🎭
-**Immersion Overhaul** — Combat now feels visceral and alive:
+### Recently Integrated (v0.5.2) 💥
+**Visual Juice System** — Combat now has visual punch:
+- ✅ **Effects System** (400 lines) — floating damage, screen shake, hit flash, combo pulse
+- ✅ **Enhanced Combat Render** (450 lines) — dynamic combat UI with effects overlay
+
+### Previously Integrated (v0.5.1) 🎭
+**Immersion Overhaul** — Combat feels visceral and alive:
 - ✅ **Typing Impact** (372 lines) — per-keystroke damage, rhythm bonuses, attack types
 - ✅ **Dialogue Engine** (384 lines) — context-aware enemy taunts and death rattles
 - ✅ **Enemy Visuals** (412 lines) — progressive ASCII damage, posture shifts, wound overlays
@@ -319,8 +324,10 @@ keyboard-warrior/
 │   │   ├── typing_context.rs      # 🔄 Replaced by lore_words.rs (754)
 │   │   └── enemy_old.rs           # 🗑️ Legacy (240)
 │   │
-│   ├── ui/                        # Rendering (~2,000 lines)
-│   │   ├── render.rs              # All screen rendering (1,502)
+│   ├── ui/                        # Rendering (~2,850 lines)
+│   │   ├── render.rs              # Core screen rendering (1,502)
+│   │   ├── combat_render.rs       # ✅ Enhanced combat UI (450)
+│   │   ├── effects.rs             # ✅ Visual effects system (400)
 │   │   ├── theme.rs               # Colors, icons, styles (424)
 │   │   └── lore_render.rs         # Lore display (80)
 │   │
@@ -349,7 +356,7 @@ keyboard-warrior/
 🗑️ = Legacy/deprecated
 ```
 
-**~24,500 lines of Rust** across 49 source files.
+**~28,000 lines of Rust** across 55 source files.
 
 ---
 

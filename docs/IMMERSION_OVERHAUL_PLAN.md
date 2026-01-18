@@ -16,9 +16,20 @@ All planned systems have been implemented:
 | Pacing System | ✅ Complete | 370 | pacing.rs |
 | Player Avatar | ✅ Complete | 381 | player_avatar.rs |
 | Combat Immersion | ✅ Complete | 498 | combat_immersion.rs |
-| **Total** | **✅** | **2,417** | **6 modules** |
+| **Immersion Total** | **✅** | **2,417** | **6 modules** |
+
+### Phase 2: Visual Juice (v0.5.2) ✅
+
+| System | Status | Lines | Module |
+|--------|--------|-------|--------|
+| Effects System | ✅ Complete | 400 | ui/effects.rs |
+| Enhanced Combat Render | ✅ Complete | 450 | ui/combat_render.rs |
+| **Juice Total** | **✅** | **850** | **2 modules** |
+
+**Grand Total: ~3,267 lines of immersion & juice across 8 modules.**
 
 Integration into CombatState complete with readonly rendering support.
+Visual effects integrated into GameState with trigger helpers.
 
 ---
 
